@@ -11,7 +11,7 @@ public class Book {
 	public Book() {
 		super();
 	}
-
+	
 	public Book(String title, String author, boolean status, String dueDate) {
 		super();
 		this.title = title;
@@ -20,6 +20,14 @@ public class Book {
 		this.dueDate = dueDate;
 	}
 
+	public Book(String title, String author)
+	{
+		this.title = title;
+		this.author = author;
+		status = true;
+		dueDate = "";
+	}
+	
 	public String getTitle() {
 		return title;
 	}

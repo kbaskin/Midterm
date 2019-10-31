@@ -10,6 +10,7 @@ public class LibraryApp {
 		// Intro
 		// createList
 		int counter = 0;
+		String bookTitle, bookAuthor;
 		ArrayList<Book> bookList = new ArrayList<>();
 		bookList.add(new Book("It follows", "me", true, "12/12/12"));
 		bookList.add(new Book("it", "me", true, "12/12/12"));
@@ -53,8 +54,10 @@ public class LibraryApp {
 
 			case 2: // search by author
 				System.out.println("Please enter the name of the author you would like to search: ");
-				String bookAuthor = scan.nextLine();
+				bookAuthor = scan.nextLine();
 				counter = 0;
+				System.out.printf("%-30s  %-30s %-15s", "   Title", "Author", "Status");
+				System.out.println();
 				for (int i = 0; i < bookList.size(); i++) {
 					if (bookAuthor.equalsIgnoreCase(bookList.get(i).getAuthor())) {
 						System.out.printf("\n%-30s %-15s", counter++ + bookList.get(i).getTitle(),
@@ -68,7 +71,10 @@ public class LibraryApp {
 
 				System.out.print("Please enter a title or title keyword for the book you are looking for: ");
 				String keyWord = scan.nextLine();
+				System.out.println();
 				counter = 0;
+				System.out.printf("%-30s  %-30s %-15s", "   Title", "Author", "Status");
+				System.out.println();
 				for (int i = 0; i < bookList.size(); i++) {
 					// check if exact title match and display before other books
 					if (keyWord.equalsIgnoreCase(bookList.get(i).getTitle())) {
@@ -91,6 +97,11 @@ public class LibraryApp {
 					}
 
 				}
+				
+				if(counter==0)
+					System.out.print("Sorry, we couldn't find any books with that keyword.");
+				
+				System.out.println();
 
 				break;
 
@@ -103,7 +114,25 @@ public class LibraryApp {
 				break;
 
 			case 6: // Donate a book
-
+				System.out.println("Oh, wait, you aren't kidding? You want to donate a book?");
+				bookTitle = Validator.getString(scan, "Sweet, please enter the title of the book: ");
+				bookAuthor = Validator.getString(scan, "Awesome, and please enter the author's name: ");
+				Boolean extraCopy = false;
+				for(int i = 0; i<bookList.size();i++)
+				{
+					if((bookList.get(i).getTitle().equalsIgnoreCase(bookTitle)) && (bookList.get(i).getAuthor().equalsIgnoreCase(bookAuthor)))
+					{
+						System.out.println("What, that book? We already got one of those. Donate it to Bryan, I heard he has a library.");
+						extraCopy = true;
+					}
+				}
+				if(extraCopy == false)
+				{
+				bookList.add(new Book(bookTitle,bookAuthor));
+				System.out.println("Thank you! We have added " + bookTitle + " to the library of Team 5.");
+				System.out.println("No takebacks.");
+				}
+				
 				break;
 			case 7: // Exit
 				cont = Validator.getStringMatchingRegex(scan, "\nAre you sure you want to leave the library? (y/n): ",
