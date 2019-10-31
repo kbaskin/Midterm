@@ -10,23 +10,54 @@ import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 
 public class BookWriteAndRead {
 
-	public static void readBooklistFromFile() {
+//	public static void readBooklistFromFile() {
+//
+//		String bookList = "listofbooks.txt";
+//		Path p = Paths.get("Book", bookList);
+//
+//		try {
+//			File file = p.toFile();
+//			BufferedReader br = new BufferedReader(new FileReader(file));
+//
+//			String line = br.readLine();
+//
+//			while (line != null) {
+//				System.out.println(line);
+//				line = br.readLine();
+//			}
+//			br.close();
+//		} catch (FileNotFoundException e) {
+//			System.out.println("Something went wrong with the file. ");
+//
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			// e.printStackTrace();
+//			System.out.println("Something went wrong when we tried to read the file. ");
+//		}
+//	}
+
+	public static ArrayList<Book> readBookListFromFile() {
 
 		String bookList = "listofbooks.txt";
-		Path p = Paths.get("Book", bookList);
+		Path p = Paths.get(bookList);
+		ArrayList<Book> listBooks = new ArrayList<>();
+		File file = p.toFile();
 
 		try {
-			File file = p.toFile();
 			BufferedReader br = new BufferedReader(new FileReader(file));
-
+			
 			String line = br.readLine();
-
+			String[] bookParts = new String[4];
+			
 			while (line != null) {
-				System.out.println(line);
-				line = br.readLine();
+				
+					bookParts = line.split("     ");
+					listBooks.add(new Book(bookParts[0],bookParts[1],bookParts[2],bookParts[3]));
+					line = br.readLine();
 			}
 			br.close();
 		} catch (FileNotFoundException e) {
@@ -37,8 +68,9 @@ public class BookWriteAndRead {
 			// e.printStackTrace();
 			System.out.println("Something went wrong when we tried to read the file. ");
 		}
+		return listBooks;
 	}
-
+	
 	public static void writeBooklistToFile(Book book) {
 
 		String bookList = "listofbooks.txt";
@@ -92,6 +124,7 @@ public class BookWriteAndRead {
 		} else {
 			System.out.println("Folder already exists.");
 		}
+		
 	}
 
 }

@@ -11,11 +11,7 @@ public class LibraryApp {
 		// createList
 		int counter = 0;
 		String bookTitle, bookAuthor;
-		ArrayList<Book> bookList = new ArrayList<>();
-		bookList.add(new Book("It follows", "me", true, "12/12/12"));
-		bookList.add(new Book("it", "me", true, "12/12/12"));
-		bookList.add(new Book("steve", "you", false, "12/12/12"));
-		bookList.add(new Book("It is all good in the hood", "you", false, "/12/12/12"));
+		ArrayList<Book> bookList = BookWriteAndRead.readBookListFromFile();
 		String cont = "n";
 		// set arraylist = BookHelper.readBookList()
 
@@ -42,10 +38,10 @@ public class LibraryApp {
 			switch (menuChoice) {
 
 			case 1: // List of books title author status
-				System.out.printf("%-30s  %-30s %-15s", "   Title", "Author", "Status");
+				System.out.printf("%-40s  %-40s %-15s", "   Title", "Author", "Status");
 				System.out.println();
 				for (int i = 0; i < bookList.size(); i++) {
-					System.out.printf("\n%-30s  %-30s %-15s", (i + 1) + ". " + bookList.get(i).getTitle(),
+					System.out.printf("\n%-40s  %-40s %-15s", (i + 1) + ". " + bookList.get(i).getTitle(),
 							bookList.get(i).getAuthor(), bookList.get(i).getStatus());
 
 				}
@@ -56,11 +52,11 @@ public class LibraryApp {
 				System.out.println("Please enter the name of the author you would like to search: ");
 				bookAuthor = scan.nextLine();
 				counter = 0;
-				System.out.printf("%-30s %-15s", "   Title", "Status");
+				System.out.printf("%-40s %-15s", "   Title", "Status");
 				System.out.println();
 				for (int i = 0; i < bookList.size(); i++) {
 					if (bookAuthor.equalsIgnoreCase(bookList.get(i).getAuthor())) {
-						System.out.printf("\n%-30s %-15s", ++counter + ". " + bookList.get(i).getTitle(),
+						System.out.printf("\n%-40s %-15s", ++counter + ". " + bookList.get(i).getTitle(),
 								bookList.get(i).getStatus());
 					}
 				}
@@ -76,12 +72,12 @@ public class LibraryApp {
 				String keyWord = scan.nextLine();
 				System.out.println();
 				counter = 0;
-				System.out.printf("%-30s  %-30s %-15s", "   Title", "Author", "Status");
+				System.out.printf("%-40s  %-40s %-15s", "   Title", "Author", "Status");
 				System.out.println();
 				for (int i = 0; i < bookList.size(); i++) {
 					// check if exact title match and display before other books
 					if (keyWord.equalsIgnoreCase(bookList.get(i).getTitle())) {
-						System.out.printf("\n%-30s %-30s %-15s", ++counter + ". " + bookList.get(i).getTitle(),
+						System.out.printf("\n%-40s %-40s %-15s", ++counter + ". " + bookList.get(i).getTitle(),
 								bookList.get(i).getAuthor(), bookList.get(i).getStatus());
 					}
 
@@ -94,7 +90,7 @@ public class LibraryApp {
 						if ((keyWord.equalsIgnoreCase(keyWords[j]))
 								&& (!keyWord.equalsIgnoreCase(bookList.get(i).getTitle()))) {
 							
-							System.out.printf("\n%-30s %-30s %-15s", ++counter + ". " + bookList.get(i).getTitle(),
+							System.out.printf("\n%-40s %-40s %-15s", ++counter + ". " + bookList.get(i).getTitle(),
 									bookList.get(i).getAuthor(), bookList.get(i).getStatus());
 						}
 					}
@@ -102,7 +98,7 @@ public class LibraryApp {
 				}
 				
 				if(counter==0)
-					System.out.print("\nSorry, we couldn't find any books with that keyword.");
+					System.out.print("\nSorry, we couldn't find any books with the keyword " + keyWord + ".");
 				
 				System.out.println();
 
@@ -113,22 +109,22 @@ public class LibraryApp {
 				break;
 
 			case 5: // return a book
-				System.out.printf("%-30s  %-30s %-15s", "   Title", "Author", "Status");
+				System.out.printf("%-40s  %-40s %-15s", "   Title", "Author", "Status");
 				for (int i = 0; i < bookList.size(); i++) {
-					System.out.printf("\n%-30s  %-30s %-15s", (i + 1) + ". " + bookList.get(i).getTitle(),
+					System.out.printf("\n%-40s  %-40s %-15s", (i + 1) + ". " + bookList.get(i).getTitle(),
 							bookList.get(i).getAuthor(), bookList.get(i).getStatus());
 
 				}
 				int bookReturn = Validator.getInt(scan, "\nSelect the number for the book you would like to return: ",
 						1, bookList.size());
 				
-				if (bookList.get(bookReturn - 1).getStatus() == true) {
+				if (bookList.get(bookReturn - 1).getStatus().equalsIgnoreCase("true")) {
 					System.out.println("Ha! You can't return a book you don't have! Try again.");
 				}
 
 				String confirmReturn = Validator.getString(scan, "\nAre you sure you want to return this book? (y/n)");
 				if ((confirmReturn.equalsIgnoreCase("y")) || (confirmReturn.equalsIgnoreCase("yes"))) {
-					bookList.get(bookReturn - 1).setStatus(true);
+					bookList.get(bookReturn - 1).setStatus("true");
 					// FIX ME - write books
 					System.out.println("\nBook returned! You should definitely check out another book now!");
 					continue;

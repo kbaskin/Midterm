@@ -4,7 +4,7 @@ public class Book {
 
 	private String title;
 	private String author;
-	private boolean status;
+	private String status;
 	private String dueDate;
 	
 
@@ -12,7 +12,7 @@ public class Book {
 		super();
 	}
 	
-	public Book(String title, String author, boolean status, String dueDate) {
+	public Book(String title, String author, String status, String dueDate) {
 		super();
 		this.title = title;
 		this.author = author;
@@ -24,7 +24,7 @@ public class Book {
 	{
 		this.title = title;
 		this.author = author;
-		status = true;
+		status = "true";
 		dueDate = "";
 	}
 	
@@ -44,11 +44,11 @@ public class Book {
 		this.author = author;
 	}
 
-	public boolean getStatus() {
+	public String getStatus() {
 		return status;
 	}
 
-	public void setStatus(boolean status) {
+	public void setStatus(String status) {
 		this.status = status;
 	}
 
@@ -62,7 +62,7 @@ public class Book {
 
 	@Override
 	public String toString() {
-		return String.format("%-30s  %-30s %-15b %-10s", title, author, status, dueDate);
+		return String.format("%-40s  %-40s %-15s %-10s", title, author, status, dueDate);
 	}
 
 }
