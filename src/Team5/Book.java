@@ -8,12 +8,9 @@ public class Book {
 	private String dueDate;
 	
 
-	
-
-
-//	public Book() {
-//		super();
-//	}
+	public Book() {
+		super();
+	}
 
 	public Book(String title, String author, boolean status, String dueDate) {
 		super();
@@ -39,7 +36,7 @@ public class Book {
 		this.author = author;
 	}
 
-	public boolean isStatus() {
+	public boolean getStatus() {
 		return status;
 	}
 
@@ -57,7 +54,7 @@ public class Book {
 
 	@Override
 	public String toString() {
-		return String.format("%-30s  %-20s %-15b %-10s", title, author, status, dueDate);
+		return String.format("%-30s  %-30s %-15b %-10s", title, author, status, dueDate);
 	}
 
 }
