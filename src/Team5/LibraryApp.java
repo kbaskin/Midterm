@@ -26,7 +26,7 @@ public class LibraryApp {
 			// menu
 			System.out.println(
 					"\n1. List all books\n2. Search by author\n3. Search by title or title keyword\n4. Check out a book\n5. Return a book\n6. Donate a book\n7. Exit");
-			int menuChoice = Validator.getInt(scan, "\nWhat would you like to do?", 1, 7);
+			int menuChoice = Validator.getInt(scan, "\nWhat would you like to do? Enter menu number: ", 1, 7);
 
 			// List of books title author status
 			// search by author
@@ -56,15 +56,18 @@ public class LibraryApp {
 				System.out.println("Please enter the name of the author you would like to search: ");
 				bookAuthor = scan.nextLine();
 				counter = 0;
-				System.out.printf("%-30s  %-30s %-15s", "   Title", "Author", "Status");
+				System.out.printf("%-30s %-15s", "   Title", "Status");
 				System.out.println();
 				for (int i = 0; i < bookList.size(); i++) {
 					if (bookAuthor.equalsIgnoreCase(bookList.get(i).getAuthor())) {
-						System.out.printf("\n%-30s %-15s", counter++ + bookList.get(i).getTitle(),
+						System.out.printf("\n%-30s %-15s", ++counter + ". " + bookList.get(i).getTitle(),
 								bookList.get(i).getStatus());
 					}
 				}
 
+				if (counter == 0)
+					System.out.print("\nSorry, we couldn't find any books by that author.");
+				System.out.println();
 				break;
 
 			case 3: // search by title keyword
@@ -99,7 +102,7 @@ public class LibraryApp {
 				}
 				
 				if(counter==0)
-					System.out.print("Sorry, we couldn't find any books with that keyword.");
+					System.out.print("\nSorry, we couldn't find any books with that keyword.");
 				
 				System.out.println();
 
@@ -110,26 +113,47 @@ public class LibraryApp {
 				break;
 
 			case 5: // return a book
+				System.out.printf("%-30s  %-30s %-15s", "   Title", "Author", "Status");
+				for (int i = 0; i < bookList.size(); i++) {
+					System.out.printf("\n%-30s  %-30s %-15s", (i + 1) + ". " + bookList.get(i).getTitle(),
+							bookList.get(i).getAuthor(), bookList.get(i).getStatus());
 
+				}
+				int bookReturn = Validator.getInt(scan, "\nSelect the number for the book you would like to return: ",
+						1, bookList.size());
+				
+				if (bookList.get(bookReturn - 1).getStatus() == true) {
+					System.out.println("Ha! You can't return a book you don't have! Try again.");
+				}
+
+				String confirmReturn = Validator.getString(scan, "\nAre you sure you want to return this book? (y/n)");
+				if ((confirmReturn.equalsIgnoreCase("y")) || (confirmReturn.equalsIgnoreCase("yes"))) {
+					bookList.get(bookReturn - 1).setStatus(true);
+					// FIX ME - write books
+					System.out.println("\nBook returned! You should definitely check out another book now!");
+					continue;
+				}
+				
 				break;
 
 			case 6: // Donate a book
-				System.out.println("Oh, wait, you aren't kidding? You want to donate a book?");
-				bookTitle = Validator.getString(scan, "Sweet, please enter the title of the book: ");
-				bookAuthor = Validator.getString(scan, "Awesome, and please enter the author's name: ");
+				System.out.println("\nOh, wait, you aren't kidding? You want to donate a book?");
+				bookTitle = Validator.getString(scan, "\nSweet, please enter the title of the book: ");
+				bookAuthor = Validator.getString(scan, "\nAwesome, and please enter the author's name: ");
 				Boolean extraCopy = false;
 				for(int i = 0; i<bookList.size();i++)
 				{
 					if((bookList.get(i).getTitle().equalsIgnoreCase(bookTitle)) && (bookList.get(i).getAuthor().equalsIgnoreCase(bookAuthor)))
 					{
-						System.out.println("What, that book? We already got one of those. Donate it to Bryan, I heard he has a library.");
+						System.out.println(
+								"\nWhat, that book? We already got one of those. Donate it to Bryan, I heard he has a library.");
 						extraCopy = true;
 					}
 				}
 				if(extraCopy == false)
 				{
 				bookList.add(new Book(bookTitle,bookAuthor));
-				System.out.println("Thank you! We have added " + bookTitle + " to the library of Team 5.");
+					System.out.println("\nThank you! We have added " + bookTitle + " to the library of Team 5.");
 				System.out.println("No takebacks.");
 				}
 				
