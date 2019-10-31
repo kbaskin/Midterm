@@ -1,0 +1,12 @@
+Anna Karenina     Leo Tolstoy     On Shelf     DueDate
+To Kill A Mockingbird     Harper Lee     On Shelf     DueDate
+The Great Gatsby     F. Scott Fitzgerald     On Shelf     DueDate
+One Hundred Years of Solitude     Gabriel Garcia Marquez     On Shelf     DueDate
+A Passage to India     E.M. Forster     On Shelf     DuteDate
+Invisible Man     Ralph Ellison     On Shelf     DueDate
+Don Quixote     Miguel de Cervantes     On Shelf     DueDate
+Beloved     Toni Morrison     On Shelf     DueDate
+Mrs. Dalloway     Virginia Woolf     On Shelf     DueDate
+Things Fall Apart     Chinua Achebe     On Shelf     DueDate
+Jane Eyre     Charlotte Bronte     On Shelf     DueDate
+The Color Purple     Alice Walker     On Shelf     DueDate
