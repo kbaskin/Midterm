@@ -34,7 +34,8 @@ public class LibraryApp {
 		if (returnName == false) {
 			System.out.println("\nI see you are new! Welcome to the best library everrrrr!");
 			// ask if they want to be a member
-			String addUser = Validator.getString(scan, "Would you like to become a member of the best library ever?");
+			String addUser = Validator.getString(scan,
+					"Would you like to become a member of the best library ever? (y/n)");
 			if (addUser.equalsIgnoreCase("yes") || (addUser.equalsIgnoreCase("y"))) {
 				userList.put(userName, null);
 				BookWriteAndRead.writeUserToFile(userList);
@@ -67,7 +68,7 @@ public class LibraryApp {
 			switch (menuChoice) {
 
 			case 1: // List of books title author status
-				System.out.printf("%-40s  %-40s %-15s", "   Title", "Author", "Status");
+				System.out.printf("%-40s  %-40s %-15s", "\n   Title", " Author", " Status");
 				System.out.println();
 				for (int i = 0; i < bookList.size(); i++) {
 					System.out.printf("\n%-40s  %-40s %-15s", (i + 1) + ". " + bookList.get(i).getTitle(),
@@ -78,15 +79,17 @@ public class LibraryApp {
 				break;
 
 			case 2: // search by author
-				System.out.println("Please enter the name of the author you would like to search: ");
+				System.out.println("\nPlease enter the name of the author you would like to search: ");
 				bookAuthor = scan.nextLine();
 				counter = 0;
-				System.out.printf("%-40s %-40s %-15s", "   Title", "Author", "Status");
+				int authorCounter = 0;
+				System.out.printf("%-40s %-40s %-15s", "\n   Title", " Author", " Status");
 				System.out.println();
 				for (int i = 0; i < bookList.size(); i++) {
 					if (bookAuthor.equalsIgnoreCase(bookList.get(i).getAuthor())) {
 						System.out.printf("\n%-40s %-40s %-15s", ++counter + ". " + bookList.get(i).getTitle(),
 								bookList.get(i).getAuthor(), bookList.get(i).getStatus());
+						authorCounter++;
 					}
 				}
 
@@ -100,9 +103,51 @@ public class LibraryApp {
 
 							System.out.printf("\n%-40s %-40s %-15s", ++counter + ". " + bookList.get(i).getTitle(),
 									bookList.get(i).getAuthor(), bookList.get(i).getStatus());
+							authorCounter++;
 						}
 					}
 
+				}
+				// add in - after showing authors found - give option to check one of the books
+				// displayed out
+				String askCheckOut = Validator.getString(scan,
+						"\n\nDid you want to check one of these books out? (y/n) ");
+				if (askCheckOut.equalsIgnoreCase("yes") || (askCheckOut.equalsIgnoreCase("y"))) {
+					int bookCheckOut = Validator.getInt(scan,
+							"\nSelect the number of the book you would like to check out? ", 1, authorCounter);
+					authorCounter = 0;
+					for (int i = 0; i < bookList.size(); i++) {
+						if (bookAuthor.equalsIgnoreCase(bookList.get(i).getAuthor())) {
+							authorCounter++;
+							if (authorCounter == bookCheckOut) {
+							bookList.get(i).setStatus("Checked Out");
+							}
+						}
+					}
+
+					for (int i = 0; i < bookList.size(); i++) {
+						// check for keyword and display matches
+						String[] keyWords = bookList.get(i).getAuthor().split(" ");
+						for (int j = 0; j < keyWords.length; j++) {
+							// confirms that it isn't found twice (not the whole title)
+							if ((bookAuthor.equalsIgnoreCase(keyWords[j]))
+									&& (!bookAuthor.equalsIgnoreCase(bookList.get(i).getAuthor()))) {
+								authorCounter++;
+								if (authorCounter == bookCheckOut) {
+								bookList.get(i).setStatus("Checked Out");
+								}
+							}
+						}
+
+					}
+						bookList.get(bookCheckOut - 1).setStatus("Checked Out");
+						LocalDate dueDate = today.plusWeeks(2);
+						bookList.get(bookCheckOut - 1).setDueDate(dueDate);
+						BookWriteAndRead.writeBooklistToFile(bookList);
+						System.out.println("\nCongrats! The book is yours until " + dueDate + ". Happy reading!!");
+
+				} else {
+					continue;
 				}
 
 				if (counter == 0)
@@ -116,7 +161,7 @@ public class LibraryApp {
 				String keyWord = scan.nextLine();
 				System.out.println();
 				counter = 0;
-				System.out.printf("%-40s  %-40s %-15s", "   Title", "Author", "Status");
+				System.out.printf("%-40s  %-40s %-15s", "\n   Title", " Author", " Status");
 				System.out.println();
 				for (int i = 0; i < bookList.size(); i++) {
 					// check if exact title match and display before other books
@@ -149,54 +194,61 @@ public class LibraryApp {
 				break;
 
 			case 4: // check out a book (reiterate book list)
-				System.out.printf("%-40s  %-40s %-15s", "   Title", "Author", "Status\n");
+				System.out.printf("%-40s  %-40s %-15s", "\n   Title", " Author", " Status\n");
 				for (int i = 0; i < bookList.size(); i++) {
 					System.out.printf("\n%-40s  %-40s %-15s", (i + 1) + ". " + bookList.get(i).getTitle(),
 							bookList.get(i).getAuthor(), bookList.get(i).getStatus());
 				}
-				int checkOut = Validator.getInt(scan, "\nSelect the number for the book you would like to check out: ",
-						1, bookList.size());
+				int checkOut = Validator.getInt(scan,
+						"\n\nSelect the number for the book you would like to check out: ", 1, bookList.size());
 
-				if (bookList.get(checkOut - 1).getStatus().equalsIgnoreCase("false")) {
-					System.out.println("This book is currently unavailable. So sad!");
-					System.out.println("\nDid you want to join the hold list for this book?");
+				if (bookList.get(checkOut - 1).getStatus().equalsIgnoreCase("Checked Out")) {
+					System.out.println("\nThis book is currently unavailable. So sad!");
+//					String bookHold = Validator.getString(scan, "Did you want to join the hold list for this book? (y/n) ");
+//					if (bookHold.equalsIgnoreCase("yes") || (bookHold.equalsIgnoreCase("y"))) {
+//						
+//						System.out.println("You have been added to the hold list and we will let you know when the book is available! Super super cool!");
+//					} else {
+//						continue; 
+//					}
 					// FIXME - add code for hold list
-				}
-
-				String confirmCheckOut = Validator.getString(scan,
-						"\nAre you sure you want to check out " + bookList.get(checkOut - 1).getTitle() + "?");
-				if (confirmCheckOut.equalsIgnoreCase("yes") || (confirmCheckOut.equalsIgnoreCase("y"))) {
-					bookList.get(checkOut - 1).setStatus("Checked Out");
-					LocalDate dueDate = today.plusWeeks(2);
-					bookList.get(checkOut - 1).setDueDate(dueDate);
-					BookWriteAndRead.writeBooklistToFile(bookList);
-					System.out.println("\nThe book is yours, now get reading! This is due back on " + dueDate
-							+ ".\nDON'T be late...");
-
+				} else {
+					String confirmCheckOut = Validator.getString(scan,
+							"\nAre you sure you want to check out " + bookList.get(checkOut - 1).getTitle()
+									+ "? (y/n) ");
+					if (confirmCheckOut.equalsIgnoreCase("yes") || (confirmCheckOut.equalsIgnoreCase("y"))) {
+						bookList.get(checkOut - 1).setStatus("Checked Out");
+						LocalDate dueDate = today.plusWeeks(2);
+						bookList.get(checkOut - 1).setDueDate(dueDate);
+						BookWriteAndRead.writeBooklistToFile(bookList);
+						System.out.println("\nThe book is yours, now get reading! This is due back on " + dueDate
+								+ ".\nDON'T be late...");
+					}
 				}
 
 				break;
 
 			case 5: // return a book
-				System.out.printf("%-40s  %-40s %-15s", "   Title", "Author", "Status");
+				System.out.printf("%-40s  %-40s %-15s", "\n   Title", " Author", " Status\n");
 				for (int i = 0; i < bookList.size(); i++) {
 					System.out.printf("\n%-40s  %-40s %-15s", (i + 1) + ". " + bookList.get(i).getTitle(),
 							bookList.get(i).getAuthor(), bookList.get(i).getStatus());
 
 				}
-				int bookReturn = Validator.getInt(scan, "\nSelect the number for the book you would like to return: ",
+				int bookReturn = Validator.getInt(scan, "\n\nSelect the number for the book you would like to return: ",
 						1, bookList.size()); // 1 - end of the list of the books they have checked out
 
 				if (bookList.get(bookReturn - 1).getStatus().equalsIgnoreCase("On Shelf")) {
-					System.out.println("Ha! You can't return a book you don't have! Try again.");
-				}
-
-				String confirmReturn = Validator.getString(scan, "\nAre you sure you want to return this book? (y/n)");
-				if ((confirmReturn.equalsIgnoreCase("y")) || (confirmReturn.equalsIgnoreCase("yes"))) {
-					bookList.get(bookReturn - 1).setStatus("On Shelf");
-					BookWriteAndRead.writeBooklistToFile(bookList);
-					System.out.println("\nBook returned! You should definitely check out another book now!");
-					continue;
+					System.out.println("\nHa! You can't return a book you don't have! Try again.");
+				} else {
+					String confirmReturn = Validator.getString(scan,
+							"\nAre you sure you want to return this book? (y/n)");
+					if ((confirmReturn.equalsIgnoreCase("y")) || (confirmReturn.equalsIgnoreCase("yes"))) {
+						bookList.get(bookReturn - 1).setStatus("On Shelf");
+						BookWriteAndRead.writeBooklistToFile(bookList);
+						System.out.println("\nBook returned! You should definitely check out another book now!");
+						continue;
+					}
 				}
 
 				break;

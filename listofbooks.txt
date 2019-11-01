@@ -1,13 +1,13 @@
-Anna Karenina     Leo Tolstoy     On Shelf     null
-To Kill A Mockingbird     Harper Lee     On Shelf     null
+Anna Karenina     Leo Tolstoy     Checked Out     2019-11-15
+To Kill A Mockingbird     Harper Lee     Checked Out     2019-11-15
 The Great Gatsby     F. Scott Fitzgerald     On Shelf     null
 One Hundred Years of Solitude     Gabriel Garcia Marquez     On Shelf     null
-A Passage to India     E.M. Forster     On Shelf     null
+A Passage to India     E.M. Forster     Checked Out     2019-11-15
 Invisible Man     Ralph Ellison     Checked Out     2019-11-15
 Don Quixote     Miguel de Cervantes     On Shelf     null
 Beloved     Toni Morrison     On Shelf     null
 Mrs. Dalloway     Virginia Woolf     On Shelf     null
 Things Fall Apart     Chinua Achebe     On Shelf     null
 Jane Eyre     Charlotte Bronte     Checked Out     2019-11-15
-The Color Purple     Alice Walker     On Shelf     null
+The Color Purple     Alice Walker     Checked Out     2019-11-15
 How To Make Up Names     Alice FakeName     On Shelf     2019-11-15
