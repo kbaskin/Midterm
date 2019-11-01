@@ -13,7 +13,6 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -177,10 +176,10 @@ public class BookWriteAndRead {
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		for (String key : userList.keySet()) {
-			System.out.println(key + "     " + userList.get(key));
+			for (String key : userList.keySet()) {
+				pwOutput.println(key + "     " + userList.get(key));
 
+			}
 		}
 
 	}
@@ -203,7 +202,7 @@ public class BookWriteAndRead {
 			while (line != null) {
 				bookParts = line.split("     ");
 
-				System.out.println(Arrays.toString(bookParts));
+				// System.out.println(Arrays.toString(bookParts));
 				name = bookParts[0];
 				for (int i = 1; i < bookParts.length; i += 4) {
 
@@ -211,7 +210,7 @@ public class BookWriteAndRead {
 					bookList.add(new Book(bookParts[i], bookParts[i + 1], bookParts[i + 2], date));
 					userList.put(name, bookList);
 
-					System.out.println("Okay?" + bookList);
+					// System.out.println("Okay?" + bookList);
 
 				}
 				line = br.readLine();
