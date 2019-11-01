@@ -163,7 +163,7 @@ public class BookWriteAndRead {
 	}
 
 	// Writing user/library member to list
-	public static void writeUserToFile(Map<String, ArrayList<Book>> userList) { // --- FIX ME: Take in HashMap
+	public static void writeUserToFile(HashMap<String, ArrayList<Book>> userList) { 
 
 		String fileName = "userlistofbooks.txt";
 		Path p = Paths.get(fileName);
@@ -173,16 +173,40 @@ public class BookWriteAndRead {
 
 		try {
 			pwOutput = new PrintWriter(new FileOutputStream(file, true));
-		} catch (FileNotFoundException e) {
+			
+			for (String key : userList.keySet()) 
+				pwOutput.println(key + "     " + userList.get(key));
+			pwOutput.close();
+			}
+		 catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			for (String key : userList.keySet()) {
-				pwOutput.println(key + "     " + userList.get(key));
 
 			}
 		}
 
-	}
+	public static void addNewUserToFile(String userName, ArrayList<Book> userList) { 
+
+		String fileName = "userlistofbooks.txt";
+		Path p = Paths.get(fileName);
+
+		File file = p.toFile();
+		PrintWriter pwOutput = null;
+
+		try {
+			pwOutput = new PrintWriter(new FileOutputStream(file, true));
+				pwOutput.println(userName + "     " + null);
+			pwOutput.close();
+			}
+		 catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+
+			}
+		}
+
+	
+	
 
 	public static HashMap<String, ArrayList<Book>> readUserFromFile() {
 
@@ -201,16 +225,14 @@ public class BookWriteAndRead {
 
 			while (line != null) {
 				bookParts = line.split("     ");
-
-				// System.out.println(Arrays.toString(bookParts));
 				name = bookParts[0];
-				for (int i = 1; i < bookParts.length; i += 4) {
+				if(bookParts[1].equals("null"))
+				userList.put(name, bookList);
+				for (int i = 1; i+3 < bookParts.length; i += 4) {
 
 					LocalDate date = LocalDate.parse(bookParts[i + 3]);
 					bookList.add(new Book(bookParts[i], bookParts[i + 1], bookParts[i + 2], date));
 					userList.put(name, bookList);
-
-					// System.out.println("Okay?" + bookList);
 
 				}
 				line = br.readLine();
