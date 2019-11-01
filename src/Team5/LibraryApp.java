@@ -1,5 +1,6 @@
 package Team5;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -14,6 +15,7 @@ public class LibraryApp {
 		ArrayList<Book> bookList = BookWriteAndRead.readBookListFromFile();
 		String cont = "n";
 		// set arraylist = BookHelper.readBookList()
+		LocalDate today = LocalDate.now();
 
 		System.out.println("It's the library, whatever, no big deal\n");
 
@@ -123,9 +125,11 @@ public class LibraryApp {
 						"\nAre you sure you want to check out " + bookList.get(checkOut - 1).getTitle() + "?");
 				if (confirmCheckOut.equalsIgnoreCase("yes") || (confirmCheckOut.equalsIgnoreCase("y"))) {
 					bookList.get(checkOut - 1).setStatus("Checked Out");
-					System.out.println("\nThe book is yours, now get reading!");
-					// FIXME - need to add in date code to tell user the return date is 2 weeks from
-					// check out date
+					LocalDate dueDate = today.plusWeeks(2);
+					bookList.get(checkOut -1).setDueDate(dueDate);
+					BookWriteAndRead.writeBooklistToFile(bookList);
+					System.out.println("\nThe book is yours, now get reading! This is due back on " + dueDate + ".\nDON'T be late...");
+					
 				}
 
 				break;

@@ -1,18 +1,20 @@
 package Team5;
 
+import java.time.LocalDate;
+
 public class Book {
 
 	private String title;
 	private String author;
 	private String status;
-	private String dueDate;
+	private LocalDate dueDate;
 	
 
 	public Book() {
 		super();
 	}
 	
-	public Book(String title, String author, String status, String dueDate) {
+	public Book(String title, String author, String status, LocalDate dueDate) {
 		super();
 		this.title = title;
 		this.author = author;
@@ -25,7 +27,7 @@ public class Book {
 		this.title = title;
 		this.author = author;
 		status = "true";
-		dueDate = "";
+		dueDate = null;
 	}
 	
 	public String getTitle() {
@@ -52,17 +54,17 @@ public class Book {
 		this.status = status;
 	}
 
-	public String getDueDate() {
+	public LocalDate getDueDate() {
 		return dueDate;
 	}
 
-	public void setDueDate(String dueDate) {
+	public void setDueDate(LocalDate dueDate) {
 		this.dueDate = dueDate;
 	}
 
 	@Override
 	public String toString() {
-		return String.format("%-40s  %-40s %-15s %-10s", title, author, status, dueDate);
+		return String.format(title + "     " + author + "     " + status + "     " + dueDate);
 	}
 
 }

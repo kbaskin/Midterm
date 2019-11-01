@@ -10,6 +10,8 @@ import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
 public class BookWriteAndRead {
@@ -56,7 +58,15 @@ public class BookWriteAndRead {
 			while (line != null) {
 				
 					bookParts = line.split("     ");
-					listBooks.add(new Book(bookParts[0],bookParts[1],bookParts[2],bookParts[3]));
+					try {
+						LocalDate date =LocalDate.parse(bookParts[3]);						
+						listBooks.add(new Book(bookParts[0],bookParts[1],bookParts[2],date));
+					}
+					
+					catch(DateTimeParseException e)
+					{
+					listBooks.add(new Book(bookParts[0],bookParts[1],bookParts[2],null));
+					}
 					line = br.readLine();
 			}
 			br.close();
