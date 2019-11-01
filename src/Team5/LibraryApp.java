@@ -2,6 +2,8 @@ package Team5;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 public class LibraryApp {
@@ -16,8 +18,33 @@ public class LibraryApp {
 		String cont = "n";
 		// set arraylist = BookHelper.readBookList()
 		LocalDate today = LocalDate.now();
+		Map<String,ArrayList<Book>> userList = new HashMap<>();
+		boolean returnName = false;
 
 		System.out.println("It's the library, whatever, no big deal\n");
+		String userName = Validator.getString(scan, "So... what's your name? ");
+		// check if user is in system
+		
+		for (String n : userList.keySet()) {
+			if (userName.equalsIgnoreCase(n)) {
+				returnName = true;
+				System.out.println("Welcome back " + userName + "!");
+			}
+		}
+
+		if (returnName == false) {
+			System.out.println("\nI see you are new! Welcome to the best library everrrrr!");
+			// ask if they want to be a member
+			String addUser = Validator.getString(scan, "Would you like to become a member of the best library ever?");
+			if (addUser.equalsIgnoreCase("yes") || (addUser.equalsIgnoreCase("y"))) {
+				userList.put(userName, null);
+				System.out.println("\nGreat! You are now an official member!");
+			} else {
+				System.out.println(
+						"\nLAME. \nMaybe when your done working your muscles at whatever gym Group 3 signed you up for... \nyou can come back and work your brain by reading some of our awesome books!");
+				System.exit(0);
+			}
+		}
 
 		do {
 
@@ -157,7 +184,7 @@ public class LibraryApp {
 
 				}
 				int bookReturn = Validator.getInt(scan, "\nSelect the number for the book you would like to return: ",
-						1, bookList.size());
+						1, bookList.size()); // 1 - end of the list of the books they have checked out
 				
 				if (bookList.get(bookReturn - 1).getStatus().equalsIgnoreCase("On Shelf")) {
 					System.out.println("Ha! You can't return a book you don't have! Try again.");
@@ -183,14 +210,16 @@ public class LibraryApp {
 					if((bookList.get(i).getTitle().equalsIgnoreCase(bookTitle)) && (bookList.get(i).getAuthor().equalsIgnoreCase(bookAuthor)))
 					{
 						System.out.println(
-								"\nWhat, that book? We already got one of those. Donate it to Bryan, I heard he has a library.");
+								"\nWhat, that book? Come on " + userName
+										+ ", we already got one of those. Donate it to Bryan, I heard he has a library.");
 						extraCopy = true;
 					}
 				}
 				if(extraCopy == false)
 				{
 				bookList.add(new Book(bookTitle,bookAuthor));
-					System.out.println("\nThank you! We have added " + bookTitle + " to the library of Team 5.");
+					System.out.println(
+							"\nThank you " + userName + "! We have added " + bookTitle + " to the library of Team 5.");
 				System.out.println("No takebacks.");
 				}
 				
