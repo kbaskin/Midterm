@@ -2,7 +2,6 @@ package Team5;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -18,13 +17,13 @@ public class LibraryApp {
 		String cont = "n";
 		// set arraylist = BookHelper.readBookList()
 		LocalDate today = LocalDate.now();
-		Map<String,ArrayList<Book>> userList = new HashMap<>();
+		Map<String, ArrayList<Book>> userList = BookWriteAndRead.readUserFromFile();
 		boolean returnName = false;
 
 		System.out.println("It's the library, whatever, no big deal\n");
 		String userName = Validator.getString(scan, "So... what's your name? ");
 		// check if user is in system
-		
+
 		for (String n : userList.keySet()) {
 			if (userName.equalsIgnoreCase(n)) {
 				returnName = true;
@@ -38,6 +37,7 @@ public class LibraryApp {
 			String addUser = Validator.getString(scan, "Would you like to become a member of the best library ever?");
 			if (addUser.equalsIgnoreCase("yes") || (addUser.equalsIgnoreCase("y"))) {
 				userList.put(userName, null);
+				BookWriteAndRead.writeUserToFile(userList);
 				System.out.println("\nGreat! You are now an official member!");
 			} else {
 				System.out.println(
@@ -85,19 +85,19 @@ public class LibraryApp {
 				System.out.println();
 				for (int i = 0; i < bookList.size(); i++) {
 					if (bookAuthor.equalsIgnoreCase(bookList.get(i).getAuthor())) {
-						System.out.printf("\n%-40s %-40s %-15s", ++counter + ". " + bookList.get(i).getTitle(), bookList.get(i).getAuthor(),
-								bookList.get(i).getStatus());
+						System.out.printf("\n%-40s %-40s %-15s", ++counter + ". " + bookList.get(i).getTitle(),
+								bookList.get(i).getAuthor(), bookList.get(i).getStatus());
 					}
 				}
-				
+
 				for (int i = 0; i < bookList.size(); i++) {
 					// check for keyword and display matches
 					String[] keyWords = bookList.get(i).getAuthor().split(" ");
 					for (int j = 0; j < keyWords.length; j++) {
-						//confirms that it isn't found twice (not the whole title)
+						// confirms that it isn't found twice (not the whole title)
 						if ((bookAuthor.equalsIgnoreCase(keyWords[j]))
 								&& (!bookAuthor.equalsIgnoreCase(bookList.get(i).getAuthor()))) {
-							
+
 							System.out.printf("\n%-40s %-40s %-15s", ++counter + ". " + bookList.get(i).getTitle(),
 									bookList.get(i).getAuthor(), bookList.get(i).getStatus());
 						}
@@ -130,20 +130,20 @@ public class LibraryApp {
 					// check for keyword and display matches
 					String[] keyWords = bookList.get(i).getTitle().split(" ");
 					for (int j = 0; j < keyWords.length; j++) {
-						//confirms that it isn't found twice (not the whole title)
+						// confirms that it isn't found twice (not the whole title)
 						if ((keyWord.equalsIgnoreCase(keyWords[j]))
 								&& (!keyWord.equalsIgnoreCase(bookList.get(i).getTitle()))) {
-							
+
 							System.out.printf("\n%-40s %-40s %-15s", ++counter + ". " + bookList.get(i).getTitle(),
 									bookList.get(i).getAuthor(), bookList.get(i).getStatus());
 						}
 					}
 
 				}
-				
-				if(counter==0)
+
+				if (counter == 0)
 					System.out.print("\nSorry, we couldn't find any books with the keyword " + keyWord + ".");
-				
+
 				System.out.println();
 
 				break;
@@ -168,10 +168,11 @@ public class LibraryApp {
 				if (confirmCheckOut.equalsIgnoreCase("yes") || (confirmCheckOut.equalsIgnoreCase("y"))) {
 					bookList.get(checkOut - 1).setStatus("Checked Out");
 					LocalDate dueDate = today.plusWeeks(2);
-					bookList.get(checkOut -1).setDueDate(dueDate);
+					bookList.get(checkOut - 1).setDueDate(dueDate);
 					BookWriteAndRead.writeBooklistToFile(bookList);
-					System.out.println("\nThe book is yours, now get reading! This is due back on " + dueDate + ".\nDON'T be late...");
-					
+					System.out.println("\nThe book is yours, now get reading! This is due back on " + dueDate
+							+ ".\nDON'T be late...");
+
 				}
 
 				break;
@@ -185,7 +186,7 @@ public class LibraryApp {
 				}
 				int bookReturn = Validator.getInt(scan, "\nSelect the number for the book you would like to return: ",
 						1, bookList.size()); // 1 - end of the list of the books they have checked out
-				
+
 				if (bookList.get(bookReturn - 1).getStatus().equalsIgnoreCase("On Shelf")) {
 					System.out.println("Ha! You can't return a book you don't have! Try again.");
 				}
@@ -197,7 +198,7 @@ public class LibraryApp {
 					System.out.println("\nBook returned! You should definitely check out another book now!");
 					continue;
 				}
-				
+
 				break;
 
 			case 6: // Donate a book
@@ -205,24 +206,21 @@ public class LibraryApp {
 				bookTitle = Validator.getString(scan, "\nSweet, please enter the title of the book: ");
 				bookAuthor = Validator.getString(scan, "\nAwesome, and please enter the author's name: ");
 				Boolean extraCopy = false;
-				for(int i = 0; i<bookList.size();i++)
-				{
-					if((bookList.get(i).getTitle().equalsIgnoreCase(bookTitle)) && (bookList.get(i).getAuthor().equalsIgnoreCase(bookAuthor)))
-					{
-						System.out.println(
-								"\nWhat, that book? Come on " + userName
-										+ ", we already got one of those. Donate it to Bryan, I heard he has a library.");
+				for (int i = 0; i < bookList.size(); i++) {
+					if ((bookList.get(i).getTitle().equalsIgnoreCase(bookTitle))
+							&& (bookList.get(i).getAuthor().equalsIgnoreCase(bookAuthor))) {
+						System.out.println("\nWhat, that book? Come on " + userName
+								+ ", we already got one of those. Donate it to Bryan, I heard he has a library.");
 						extraCopy = true;
 					}
 				}
-				if(extraCopy == false)
-				{
-				bookList.add(new Book(bookTitle,bookAuthor));
+				if (extraCopy == false) {
+					bookList.add(new Book(bookTitle, bookAuthor));
 					System.out.println(
 							"\nThank you " + userName + "! We have added " + bookTitle + " to the library of Team 5.");
-				System.out.println("No takebacks.");
+					System.out.println("No takebacks.");
 				}
-				
+
 				break;
 			case 7: // Exit
 				cont = Validator.getStringMatchingRegex(scan, "\nAre you sure you want to leave the library? (y/n): ",
