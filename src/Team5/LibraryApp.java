@@ -2,6 +2,7 @@ package Team5;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -17,7 +18,8 @@ public class LibraryApp {
 		String cont = "n";
 		// set arraylist = BookHelper.readBookList()
 		LocalDate today = LocalDate.now();
-		Map<String, ArrayList<Book>> userList = BookWriteAndRead.readUserFromFile();
+		HashMap<String, ArrayList<Book>> userList = new HashMap<>();
+		userList=BookWriteAndRead.readUserFromFile();
 		boolean returnName = false;
 
 		System.out.println("It's the library, whatever, no big deal\n");
@@ -38,11 +40,16 @@ public class LibraryApp {
 					"Would you like to become a member of the best library ever? (y/n)");
 			if (addUser.equalsIgnoreCase("yes") || (addUser.equalsIgnoreCase("y"))) {
 				userList.put(userName, null);
-				BookWriteAndRead.writeUserToFile(userList);
+				for(String i: userList.keySet())
+				{
+					System.out.println(i + userList.get(i));
+				}
+				
+				BookWriteAndRead.addNewUserToFile(userName,null);
 				System.out.println("\nGreat! You are now an official member!");
 			} else {
 				System.out.println(
-						"\nLAME. \nMaybe when your done working your muscles at whatever gym Group 3 signed you up for... \nyou can come back and work your brain by reading some of our awesome books!");
+						"\nLAME. \nMaybe when you're done working your muscles at whatever gym Group 3 signed you up for... \nyou can come back and work your brain by reading some of our awesome books!");
 				System.exit(0);
 			}
 		}
