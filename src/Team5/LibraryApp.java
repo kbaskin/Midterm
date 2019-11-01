@@ -54,17 +54,32 @@ public class LibraryApp {
 				System.out.println("Please enter the name of the author you would like to search: ");
 				bookAuthor = scan.nextLine();
 				counter = 0;
-				System.out.printf("%-40s %-15s", "   Title", "Status");
+				System.out.printf("%-40s %-40s %-15s", "   Title", "Author", "Status");
 				System.out.println();
 				for (int i = 0; i < bookList.size(); i++) {
 					if (bookAuthor.equalsIgnoreCase(bookList.get(i).getAuthor())) {
-						System.out.printf("\n%-40s %-15s", ++counter + ". " + bookList.get(i).getTitle(),
+						System.out.printf("\n%-40s %-40s %-15s", ++counter + ". " + bookList.get(i).getTitle(), bookList.get(i).getAuthor(),
 								bookList.get(i).getStatus());
 					}
 				}
+				
+				for (int i = 0; i < bookList.size(); i++) {
+					// check for keyword and display matches
+					String[] keyWords = bookList.get(i).getAuthor().split(" ");
+					for (int j = 0; j < keyWords.length; j++) {
+						//confirms that it isn't found twice (not the whole title)
+						if ((bookAuthor.equalsIgnoreCase(keyWords[j]))
+								&& (!bookAuthor.equalsIgnoreCase(bookList.get(i).getAuthor()))) {
+							
+							System.out.printf("\n%-40s %-40s %-15s", ++counter + ". " + bookList.get(i).getTitle(),
+									bookList.get(i).getAuthor(), bookList.get(i).getStatus());
+						}
+					}
+
+				}
 
 				if (counter == 0)
-					System.out.print("\nSorry, we couldn't find any books by that author.");
+					System.out.print("\nSorry, we couldn't find any books by " + bookAuthor + ".");
 				System.out.println();
 				break;
 
@@ -151,7 +166,7 @@ public class LibraryApp {
 				String confirmReturn = Validator.getString(scan, "\nAre you sure you want to return this book? (y/n)");
 				if ((confirmReturn.equalsIgnoreCase("y")) || (confirmReturn.equalsIgnoreCase("yes"))) {
 					bookList.get(bookReturn - 1).setStatus("On Shelf");
-					// FIX ME - write books
+					BookWriteAndRead.writeBooklistToFile(bookList);
 					System.out.println("\nBook returned! You should definitely check out another book now!");
 					continue;
 				}

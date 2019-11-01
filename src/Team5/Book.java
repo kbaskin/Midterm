@@ -26,7 +26,7 @@ public class Book {
 	{
 		this.title = title;
 		this.author = author;
-		status = "true";
+		status = "On Shelf";
 		dueDate = null;
 	}
 	

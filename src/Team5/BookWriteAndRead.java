@@ -65,7 +65,7 @@ public class BookWriteAndRead {
 					
 					catch(DateTimeParseException e)
 					{
-					listBooks.add(new Book(bookParts[0],bookParts[1],bookParts[2],null));
+					listBooks.add(new Book(bookParts[0],bookParts[1],bookParts[2], null));
 					}
 					line = br.readLine();
 			}
