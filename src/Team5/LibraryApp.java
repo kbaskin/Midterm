@@ -105,6 +105,28 @@ public class LibraryApp {
 				break;
 
 			case 4: // check out a book (reiterate book list)
+				System.out.printf("%-40s  %-40s %-15s", "   Title", "Author", "Status\n");
+				for (int i = 0; i < bookList.size(); i++) {
+					System.out.printf("\n%-40s  %-40s %-15s", (i + 1) + ". " + bookList.get(i).getTitle(),
+							bookList.get(i).getAuthor(), bookList.get(i).getStatus());
+				}
+				int checkOut = Validator.getInt(scan, "\nSelect the number for the book you would like to check out: ",
+						1, bookList.size());
+
+				if (bookList.get(checkOut - 1).getStatus().equalsIgnoreCase("false")) {
+					System.out.println("This book is currently unavailable. So sad!");
+					System.out.println("\nDid you want to join the hold list for this book?");
+					// FIXME - add code for hold list
+				}
+
+				String confirmCheckOut = Validator.getString(scan,
+						"\nAre you sure you want to check out " + bookList.get(checkOut - 1).getTitle() + "?");
+				if (confirmCheckOut.equalsIgnoreCase("yes") || (confirmCheckOut.equalsIgnoreCase("y"))) {
+					bookList.get(checkOut - 1).setStatus("Checked Out");
+					System.out.println("\nThe book is yours, now get reading!");
+					// FIXME - need to add in date code to tell user the return date is 2 weeks from
+					// check out date
+				}
 
 				break;
 
@@ -118,13 +140,13 @@ public class LibraryApp {
 				int bookReturn = Validator.getInt(scan, "\nSelect the number for the book you would like to return: ",
 						1, bookList.size());
 				
-				if (bookList.get(bookReturn - 1).getStatus().equalsIgnoreCase("true")) {
+				if (bookList.get(bookReturn - 1).getStatus().equalsIgnoreCase("On Shelf")) {
 					System.out.println("Ha! You can't return a book you don't have! Try again.");
 				}
 
 				String confirmReturn = Validator.getString(scan, "\nAre you sure you want to return this book? (y/n)");
 				if ((confirmReturn.equalsIgnoreCase("y")) || (confirmReturn.equalsIgnoreCase("yes"))) {
-					bookList.get(bookReturn - 1).setStatus("true");
+					bookList.get(bookReturn - 1).setStatus("On Shelf");
 					// FIX ME - write books
 					System.out.println("\nBook returned! You should definitely check out another book now!");
 					continue;
