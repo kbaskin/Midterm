@@ -90,6 +90,31 @@ public class BookWriteAndRead {
 
 		}
 	}
+	
+	public static void writeBooklistToFile(ArrayList<Book> writeList) {
+
+		String bookList = "listofbooks.txt";
+		Path p = Paths.get(bookList);
+
+		File file = p.toFile();
+		PrintWriter pwOutput = null;
+
+		try {
+			pwOutput = new PrintWriter(new FileOutputStream(file));
+			
+			for(int i = 0; i<writeList.size(); i++)
+			{
+			pwOutput.println(writeList.get(i));
+			}
+			pwOutput.close();
+			
+		} catch (FileNotFoundException e) {
+			System.out.println("Contact customer service.");
+		} finally {
+			pwOutput.close();
+
+		}
+	}
 
 	public static void createFile() {
 
