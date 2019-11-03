@@ -13,13 +13,18 @@ public class LibraryApp {
 		// Intro
 		// createList
 		int counter = 0;
+		boolean lateFees = false;
 		String bookTitle, bookAuthor;
-		ArrayList<Book> bookList = BookWriteAndRead.readBookListFromFile();
+		ArrayList<Book> bookList = new ArrayList<Book>();
+		bookList = BookWriteAndRead.readBookListFromFile();
 		String cont = "n";
+		String status = "On Shelf";
 		// set arraylist = BookHelper.readBookList()
 		LocalDate today = LocalDate.now();
 		HashMap<String, ArrayList<Book>> userList = new HashMap<>();
 		userList=BookWriteAndRead.readUserFromFile();
+		for(String n: userList.keySet())
+			System.out.println(n + userList.get(n));
 		boolean returnName = false;
 
 		System.out.println("It's the library, whatever, no big deal\n");
@@ -28,6 +33,7 @@ public class LibraryApp {
 
 		for (String n : userList.keySet()) {
 			if (userName.equalsIgnoreCase(n)) {
+				userName = n;
 				returnName = true;
 				System.out.println("Welcome back " + userName + "!");
 			}
@@ -46,6 +52,7 @@ public class LibraryApp {
 				}
 				
 				BookWriteAndRead.addNewUserToFile(userName,null);
+				userList=BookWriteAndRead.readUserFromFile();
 				System.out.println("\nGreat! You are now an official member!");
 			} else {
 				System.out.println(
@@ -54,6 +61,33 @@ public class LibraryApp {
 			}
 		}
 
+		//create ArrayList for user
+		ArrayList <Book> checkedOutBooks = new ArrayList<Book>();
+		checkedOutBooks.ensureCapacity(5);		
+		checkedOutBooks = userList.get(userName);
+		for(Book b : checkedOutBooks)
+		{
+			if (b.getDueDate().isBefore(today))
+			{
+				lateFees = true;
+				System.out.println(b.getTitle() + " by " + b.getAuthor() + " is overdue.");
+			}
+		}
+		if(lateFees)
+		{
+		String choice =Validator.getStringMatchingRegex(scan,"Do you want to pay the late fees with your Visa ending in " + (int)(Math.random()*10000) + "?", "[YyNn]");
+			if(choice.equalsIgnoreCase("n"))
+			{
+				System.out.println("What, too cheap eh? Go win some money sweeping mines or playing hangman then, there's at least a few groups doing those right?");
+				System.exit(0);
+			}
+			System.out.println("Your card has been charged, you should really return those!");
+		}
+		
+		
+		
+		
+		
 		do {
 
 			// menu
@@ -78,6 +112,7 @@ public class LibraryApp {
 				System.out.printf("%-40s  %-40s %-15s", "\n   Title", " Author", " Status");
 				System.out.println();
 				for (int i = 0; i < bookList.size(); i++) {
+					
 					System.out.printf("\n%-40s  %-40s %-15s", (i + 1) + ". " + bookList.get(i).getTitle(),
 							bookList.get(i).getAuthor(), bookList.get(i).getStatus());
 
@@ -94,6 +129,10 @@ public class LibraryApp {
 				System.out.println();
 				for (int i = 0; i < bookList.size(); i++) {
 					if (bookAuthor.equalsIgnoreCase(bookList.get(i).getAuthor())) {
+//						if(bookList.get(i).getQuantity()==0)
+//							bookList.get(i).setStatus("Checked Out");
+//						else
+//							bookList.get(i).setStatus("On Shelf");
 						System.out.printf("\n%-40s %-40s %-15s", ++counter + ". " + bookList.get(i).getTitle(),
 								bookList.get(i).getAuthor(), bookList.get(i).getStatus());
 						authorCounter++;
@@ -150,6 +189,7 @@ public class LibraryApp {
 						bookList.get(bookCheckOut - 1).setStatus("Checked Out");
 						LocalDate dueDate = today.plusWeeks(2);
 						bookList.get(bookCheckOut - 1).setDueDate(dueDate);
+						
 						BookWriteAndRead.writeBooklistToFile(bookList);
 						System.out.println("\nCongrats! The book is yours until " + dueDate + ". Happy reading!!");
 
@@ -224,9 +264,21 @@ public class LibraryApp {
 							"\nAre you sure you want to check out " + bookList.get(checkOut - 1).getTitle()
 									+ "? (y/n) ");
 					if (confirmCheckOut.equalsIgnoreCase("yes") || (confirmCheckOut.equalsIgnoreCase("y"))) {
+						bookList.get(checkOut -1).setQuantity(bookList.get(checkOut -1).getQuantity()-1);
+						if(bookList.get(checkOut -1).getQuantity() == 0)
 						bookList.get(checkOut - 1).setStatus("Checked Out");
 						LocalDate dueDate = today.plusWeeks(2);
 						bookList.get(checkOut - 1).setDueDate(dueDate);
+						if(checkedOutBooks.size()<1)
+						{
+							userList.get(userName).add(bookList.get(checkOut - 1));
+							BookWriteAndRead.rewriteUserToFile(userList);
+						}
+						else
+						{
+						checkedOutBooks.add(bookList.get(checkOut -1));
+						BookWriteAndRead.rewriteUserToFile(userList);
+						}
 						BookWriteAndRead.writeBooklistToFile(bookList);
 						System.out.println("\nThe book is yours, now get reading! This is due back on " + dueDate
 								+ ".\nDON'T be late...");
@@ -236,50 +288,77 @@ public class LibraryApp {
 				break;
 
 			case 5: // return a book
-				System.out.printf("%-40s  %-40s %-15s", "\n   Title", " Author", " Status\n");
-				for (int i = 0; i < bookList.size(); i++) {
-					System.out.printf("\n%-40s  %-40s %-15s", (i + 1) + ". " + bookList.get(i).getTitle(),
-							bookList.get(i).getAuthor(), bookList.get(i).getStatus());
+				if(checkedOutBooks.size() <1)
+				{
+					System.out.println("You don't have any books checked out!");
+						break;
+				}
+				System.out.printf("%-40s  %-40s %-15s", "\n   Title", " Author\n");
+				for (int i = 0; i < checkedOutBooks.size(); i++) {
+					System.out.printf("\n%-40s  %-40s", (i + 1) + ". " + checkedOutBooks.get(i).getTitle(),
+							checkedOutBooks.get(i).getAuthor());
 
 				}
 				int bookReturn = Validator.getInt(scan, "\n\nSelect the number for the book you would like to return: ",
-						1, bookList.size()); // 1 - end of the list of the books they have checked out
-
-				if (bookList.get(bookReturn - 1).getStatus().equalsIgnoreCase("On Shelf")) {
-					System.out.println("\nHa! You can't return a book you don't have! Try again.");
-				} else {
+						1, checkedOutBooks.size()); // 1 - end of the list of the books they have checked out
+				
 					String confirmReturn = Validator.getString(scan,
 							"\nAre you sure you want to return this book? (y/n)");
 					if ((confirmReturn.equalsIgnoreCase("y")) || (confirmReturn.equalsIgnoreCase("yes"))) {
-						bookList.get(bookReturn - 1).setStatus("On Shelf");
+						
+						//Increases quantity in bookList by one
+						
+						for(Book b: bookList)
+						{
+							if(b.getTitle().equals(checkedOutBooks.get((bookReturn-1)).getTitle()) && b.getAuthor().equals(checkedOutBooks.get((bookReturn-1)).getAuthor()))
+							b.setQuantity(b.getQuantity()+1);
+							
+						}
+						
+						//bookList.get(bookReturn - 1).setStatus("On Shelf");
+						checkedOutBooks.remove(bookReturn-1);
+						BookWriteAndRead.rewriteUserToFile(userList);
 						BookWriteAndRead.writeBooklistToFile(bookList);
 						System.out.println("\nBook returned! You should definitely check out another book now!");
 						continue;
 					}
-				}
+				
 
-				break;
+			break;
 
 			case 6: // Donate a book
 				System.out.println("\nOh, wait, you aren't kidding? You want to donate a book?");
 				bookTitle = Validator.getString(scan, "\nSweet, please enter the title of the book: ");
 				bookAuthor = Validator.getString(scan, "\nAwesome, and please enter the author's name: ");
-				Boolean extraCopy = false;
-				for (int i = 0; i < bookList.size(); i++) {
-					if ((bookList.get(i).getTitle().equalsIgnoreCase(bookTitle))
-							&& (bookList.get(i).getAuthor().equalsIgnoreCase(bookAuthor))) {
-						System.out.println("\nWhat, that book? Come on " + userName
-								+ ", we already got one of those. Donate it to Bryan, I heard he has a library.");
-						extraCopy = true;
+				Boolean extraCopies = false;
+				for (Book b : bookList) {
+					if ((b.getTitle().equalsIgnoreCase(bookTitle))
+							&& b.getAuthor().equalsIgnoreCase(bookAuthor))
+					{
+						if(b.getQuantity() > 4)
+						{
+							System.out.println("\nWhat, that book? Come on " + userName
+									+ ", we already got like, " + b.getQuantity() + " of those. Donate it to Bryan, I heard he has a library.");
+							
+						}
+						else
+						{
+						b.setQuantity(b.getQuantity() + 1);
+						System.out.println("\nThank you " +  userName + "! Now we have another copy of " + bookTitle + " for the Team 5.");
+						System.out.println("no takebacks.");
+						b.setStatus("On Shelf");
+						}
+						extraCopies = true;
 					}
 				}
-				if (extraCopy == false) {
+				if (!extraCopies) {
 					bookList.add(new Book(bookTitle, bookAuthor));
 					System.out.println(
 							"\nThank you " + userName + "! We have added " + bookTitle + " to the library of Team 5.");
 					System.out.println("No takebacks.");
 				}
 
+				BookWriteAndRead.writeBooklistToFile(bookList);
 				break;
 			case 7: // Exit
 				cont = Validator.getStringMatchingRegex(scan, "\nAre you sure you want to leave the library? (y/n): ",

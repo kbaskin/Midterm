@@ -8,18 +8,19 @@ public class Book {
 	private String author;
 	private String status;
 	private LocalDate dueDate;
-	
+	private int quantity;
 
 	public Book() {
 		super();
 	}
 	
-	public Book(String title, String author, String status, LocalDate dueDate) {
+	public Book(String title, String author, String status, LocalDate dueDate, int quantity) {
 		super();
 		this.title = title;
 		this.author = author;
 		this.status = status;
 		this.dueDate = dueDate;
+		this.quantity = quantity;
 	}
 
 	public Book(String title, String author)
@@ -28,6 +29,7 @@ public class Book {
 		this.author = author;
 		status = "On Shelf";
 		dueDate = null;
+		quantity = 1;
 	}
 	
 	public String getTitle() {
@@ -61,10 +63,22 @@ public class Book {
 	public void setDueDate(LocalDate dueDate) {
 		this.dueDate = dueDate;
 	}
+	
+	public int getQuantity() {
+		return quantity;
+	}
+	
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+//		if(quantity == 0)
+//			this.status = "checked out";
+//		if(quantity >=1)
+//			this.status = "on shelf";
+	}
 
 	@Override
 	public String toString() {
-		return String.format(title + "     " + author + "     " + status + "     " + dueDate);
+		return String.format(title + "     " + author + "     " + status + "     " + dueDate + "     " + quantity);
 	}
 
 }

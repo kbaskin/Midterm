@@ -1,5 +1,10 @@
-Tyler M.     How To Make Up Names     Alice FakeName     On Shelf     2019-11-15
-Katie Baskin     null
-Matt Lynn     null
-Steve Steveson     null
+Steven Stevenson     null
 Nuller Nullerson     null
+Katie Baskin     null
+Jim Peters     null
+Steve Steveson     null
+Matt Lynn     The Great Gatsby     F. Scott Fitzgerald     Checked Out     2019-11-17     0
+Jane Austin     How To Make Up Names     Alice FakeName     Checked Out     2019-11-17     0
+Gary Cox     null
+Tyler M.     How To Make Up Names     Alice FakeName     On Shelf     2019-11-15     1     I don't even write books     Stevie can'twrite     On Shelf     2019-11-17     4
+Kyle Dixon     Java For Dummies     Antonella Solomon     Checked Out     2019-02-14     0

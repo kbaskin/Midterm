@@ -14,7 +14,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 public class BookWriteAndRead {
 
@@ -55,18 +54,20 @@ public class BookWriteAndRead {
 			BufferedReader br = new BufferedReader(new FileReader(file));
 
 			String line = br.readLine();
-			String[] bookParts = new String[4];
+			String[] bookParts = new String[5];
+			int quantity;
 
 			while (line != null) {
 
 				bookParts = line.split("     ");
+				quantity = Integer.parseInt(bookParts[4]); 
 				try {
 					LocalDate date = LocalDate.parse(bookParts[3]);
-					listBooks.add(new Book(bookParts[0], bookParts[1], bookParts[2], date));
+					listBooks.add(new Book(bookParts[0], bookParts[1], bookParts[2], date, quantity));
 				}
 
 				catch (DateTimeParseException e) {
-					listBooks.add(new Book(bookParts[0], bookParts[1], bookParts[2], null));
+					listBooks.add(new Book(bookParts[0], bookParts[1], bookParts[2], null, quantity));
 				}
 				line = br.readLine();
 			}
@@ -163,7 +164,7 @@ public class BookWriteAndRead {
 	}
 
 	// Writing user/library member to list
-	public static void writeUserToFile(HashMap<String, ArrayList<Book>> userList) { 
+	public static void rewriteUserToFile(HashMap<String, ArrayList<Book>> userList) { 
 
 		String fileName = "userlistofbooks.txt";
 		Path p = Paths.get(fileName);
@@ -172,10 +173,32 @@ public class BookWriteAndRead {
 		PrintWriter pwOutput = null;
 
 		try {
-			pwOutput = new PrintWriter(new FileOutputStream(file, true));
+			pwOutput = new PrintWriter(new FileOutputStream(file));
 			
-			for (String key : userList.keySet()) 
-				pwOutput.println(key + "     " + userList.get(key));
+			for (String name: userList.keySet()) {
+				pwOutput.print(name);
+				if(userList.get(name) == null)
+				{
+					pwOutput.println("     null");
+				}
+				else if(userList.get(name).size() != 0)
+				{
+					for(int i = 0;i<userList.get(name).size(); i++)
+				{
+					
+					pwOutput.print("     " + userList.get(name).get(i).getTitle()
+						 	   + "     " + userList.get(name).get(i).getAuthor()
+						 	   + "     " + userList.get(name).get(i).getStatus()
+						 	   + "     " + userList.get(name).get(i).getDueDate()
+						 	   + "     " + userList.get(name).get(i).getQuantity());
+					
+				}
+					pwOutput.println();
+				}
+				else
+					pwOutput.println("     null");
+
+			}
 			pwOutput.close();
 			}
 		 catch (FileNotFoundException e) {
@@ -195,7 +218,7 @@ public class BookWriteAndRead {
 
 		try {
 			pwOutput = new PrintWriter(new FileOutputStream(file, true));
-				pwOutput.println(userName + "     " + null);
+				pwOutput.println(userName + "     null");
 			pwOutput.close();
 			}
 		 catch (FileNotFoundException e) {
@@ -204,6 +227,27 @@ public class BookWriteAndRead {
 
 			}
 		}
+	
+//	public static void addNewUserToFile(HashMap<String, ArrayList<Book>> userList) { 
+//
+//		String fileName = "userlistofbooks.txt";
+//		Path p = Paths.get(fileName);
+//
+//		File file = p.toFile();
+//		PrintWriter pwOutput = null;
+//
+//		try {
+//			pwOutput = new PrintWriter(new FileOutputStream(file, true));
+//			pwOutput.println(user);
+//			pwOutput.close();
+//			}
+//		 catch (FileNotFoundException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//
+//			}
+//		}
+	
 
 	
 	
@@ -213,25 +257,26 @@ public class BookWriteAndRead {
 		String fileName = "userlistofbooks.txt";
 		Path p = Paths.get(fileName);
 		HashMap<String, ArrayList<Book>> userList = new HashMap<>();
-		ArrayList<Book> bookList = new ArrayList<>();
 
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(fileName));
 
 			String line = br.readLine();
-			String[] bookParts;
 
 			String name;
 
 			while (line != null) {
+				ArrayList<Book> bookList = new ArrayList<>();
+				String[] bookParts;				
 				bookParts = line.split("     ");
 				name = bookParts[0];
 				if(bookParts[1].equals("null"))
 				userList.put(name, bookList);
-				for (int i = 1; i+3 < bookParts.length; i += 4) {
+				for (int i = 1; i+4 < bookParts.length; i += 5) {
 
 					LocalDate date = LocalDate.parse(bookParts[i + 3]);
-					bookList.add(new Book(bookParts[i], bookParts[i + 1], bookParts[i + 2], date));
+					int quantity = Integer.parseInt(bookParts[i+4]);
+					bookList.add(new Book(bookParts[i], bookParts[i + 1], bookParts[i + 2], date, quantity));
 					userList.put(name, bookList);
 
 				}
