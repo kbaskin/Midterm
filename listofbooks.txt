@@ -18,3 +18,5 @@ The Adventures of Randy Saav     Kyle Dixon     On Shelf     null     1
 1984     George Orwell     On Shelf     2019-11-18     1
 The Goldfinch     Donna Tart     On Shelf     null     1
 How to Disappoint a Computer     Computer     Checked Out     2019-11-04     0
+It     Steven King     On Shelf     null     1
+It Follows     Josh Grimm     On Shelf     null     1
