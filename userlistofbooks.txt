@@ -2,10 +2,10 @@ Steven Stevenson     null
 Kevin Chung     null
 Kyle Dixon     Java For Dummies     Antonella Solomon     Checked Out     2019-02-14     0
 Nuller Nullerson     null
-Katie Baskin     null
+Katie Baskin     1984     George Orwell     Checked Out     2019-11-18     0
 Jim Peters     null
 Steve Steveson     null
-Matt Lynn     The Great Gatsby     F. Scott Fitzgerald     Checked Out     2019-11-17     0
+Matt Lynn     The Great Gatsby     F. Scott Fitzgerald     Checked Out     2019-11-17     0     Anna Karenina     Leo Tolstoy     Checked Out     2019-11-18     0
 Jane Austin     How To Make Up Names     Alice FakeName     Checked Out     2019-11-17     0
 Gary Cox     null
 Tyler M.     How To Make Up Names     Alice FakeName     On Shelf     2019-11-15     1     I don't even write books     Stevie can'twrite     On Shelf     2019-11-17     4

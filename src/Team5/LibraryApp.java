@@ -21,12 +21,13 @@ public class LibraryApp {
 		String status = "On Shelf";
 		// set arraylist = BookHelper.readBookList()
 		LocalDate today = LocalDate.now();
+		LocalDate dueDate = today.plusWeeks(2);
 		HashMap<String, ArrayList<Book>> userList = new HashMap<>();
 		userList=BookWriteAndRead.readUserFromFile();
 		boolean returnName = false;
 
 		System.out.println("It's the library, whatever, no big deal\n");
-		String userName = Validator.getString(scan, "So... what's your name? ");
+		String userName = Validator.getString(scan, "So... what's your full name? ");
 		// check if user is in system
 
 		for (String n : userList.keySet()) {
@@ -73,7 +74,7 @@ public class LibraryApp {
 		}
 		if(lateFees)
 		{
-		String choice =Validator.getStringMatchingRegex(scan,"Do you want to pay the late fees with your Visa ending in " + (int)(Math.random()*10000) + "?", "[YyNn]");
+		String choice =Validator.getStringMatchingRegex(scan,"Do you want to pay the late fees with your Visa ending in " + (int)(Math.random()*10000) + "? (y/n):", "[YyNn]");
 			if(choice.equalsIgnoreCase("n"))
 			{
 				System.out.println("What, too cheap eh? Go win some money sweeping mines or playing hangman then, there's at least a few groups doing those right?");
@@ -153,7 +154,13 @@ public class LibraryApp {
 					}
 
 				}
-				// add in - after showing authors found - give option to check one of the books
+				if (counter == 0)
+				{
+					System.out.print("\nSorry, we couldn't find any books by " + bookAuthor + ".");
+				System.out.println();
+				break;
+				}
+				// after showing authors found - give option to check one of the books
 				// displayed out
 				String askCheckOut = Validator.getString(scan,
 						"\n\nDid you want to check one of these books out? (y/n) ");
@@ -161,16 +168,16 @@ public class LibraryApp {
 					int bookCheckOut = Validator.getInt(scan,
 							"\nSelect the number of the book you would like to check out? ", 1, authorCounter);
 					authorCounter = 0;
-					for (int i = 0; i < bookList.size(); i++) {
+					for (int i = 0; i < bookList.size();i++) {
 						if (bookAuthor.equalsIgnoreCase(bookList.get(i).getAuthor())) {
 							authorCounter++;
 							if (authorCounter == bookCheckOut) {
-							bookList.get(i).setStatus("Checked Out");
+								checkOutBook(bookList, i, today, userList, checkedOutBooks, userName);
 							}
 						}
 					}
 
-					for (int i = 0; i < bookList.size(); i++) {
+					for (int i = 0; i< bookList.size(); i++) {
 						// check for keyword and display matches
 						String[] keyWords = bookList.get(i).getAuthor().split(" ");
 						for (int j = 0; j < keyWords.length; j++) {
@@ -179,26 +186,13 @@ public class LibraryApp {
 									&& (!bookAuthor.equalsIgnoreCase(bookList.get(i).getAuthor()))) {
 								authorCounter++;
 								if (authorCounter == bookCheckOut) {
-								bookList.get(i).setStatus("Checked Out");
+									checkOutBook(bookList, i, dueDate, userList, checkedOutBooks, userName);
 								}
 							}
 						}
 
 					}
-						bookList.get(bookCheckOut - 1).setStatus("Checked Out");
-						LocalDate dueDate = today.plusWeeks(2);
-						bookList.get(bookCheckOut - 1).setDueDate(dueDate);
-						
-						BookWriteAndRead.writeBooklistToFile(bookList);
-						System.out.println("\nCongrats! The book is yours until " + dueDate + ". Happy reading!!");
-
-				} else {
-					continue;
-				}
-
-				if (counter == 0)
-					System.out.print("\nSorry, we couldn't find any books by " + bookAuthor + ".");
-				System.out.println();
+				} 
 				break;
 
 			case 3: // search by title keyword
@@ -263,24 +257,7 @@ public class LibraryApp {
 							"\nAre you sure you want to check out " + bookList.get(checkOut - 1).getTitle()
 									+ "? (y/n) ");
 					if (confirmCheckOut.equalsIgnoreCase("yes") || (confirmCheckOut.equalsIgnoreCase("y"))) {
-						bookList.get(checkOut -1).setQuantity(bookList.get(checkOut -1).getQuantity()-1);
-						if(bookList.get(checkOut -1).getQuantity() == 0)
-						bookList.get(checkOut - 1).setStatus("Checked Out");
-						LocalDate dueDate = today.plusWeeks(2);
-						bookList.get(checkOut - 1).setDueDate(dueDate);
-						if(checkedOutBooks.size()<1)
-						{
-							userList.get(userName).add(bookList.get(checkOut - 1));
-							BookWriteAndRead.rewriteUserToFile(userList);
-						}
-						else
-						{
-						checkedOutBooks.add(bookList.get(checkOut -1));
-						BookWriteAndRead.rewriteUserToFile(userList);
-						}
-						BookWriteAndRead.writeBooklistToFile(bookList);
-						System.out.println("\nThe book is yours, now get reading! This is due back on " + dueDate
-								+ ".\nDON'T be late...");
+						checkOutBook(bookList, checkOut - 1, today, userList, checkedOutBooks, userName);
 					}
 				}
 
@@ -337,6 +314,7 @@ public class LibraryApp {
 					if ((b.getTitle().equalsIgnoreCase(bookTitle))
 							&& b.getAuthor().equalsIgnoreCase(bookAuthor))
 					{
+						//if we have 5 copies, rejects
 						if(b.getQuantity() > 4)
 						{
 							System.out.println("\nWhat, that book? Come on " + userName
@@ -345,6 +323,7 @@ public class LibraryApp {
 						}
 						else
 						{
+							//if we have less than 5, increase quantity
 						b.setQuantity(b.getQuantity() + 1);
 						System.out.println("\nThank you " +  userName + "! Now we have another copy of " + bookTitle + " for the Team 5.");
 						System.out.println("no takebacks.");
@@ -353,6 +332,7 @@ public class LibraryApp {
 						extraCopies = true;
 					}
 				}
+				//if we have no copies, add a copy to list
 				if (!extraCopies) {
 					bookList.add(new Book(bookTitle, bookAuthor));
 					System.out.println(
@@ -375,6 +355,30 @@ public class LibraryApp {
 		System.out.println("...\n...\n...or Else.");
 
 		scan.close();
+	}
+	
+	
+	public static void checkOutBook (ArrayList<Book> bookList, int checkOut, LocalDate dueDate, HashMap<String, ArrayList<Book>> userList, ArrayList<Book> checkedOutBooks, String userName)
+	{
+		//reduces quantity by 1 and checks for no copies left
+		bookList.get(checkOut).setQuantity(bookList.get(checkOut).getQuantity()-1);
+		if(bookList.get(checkOut).getQuantity() == 0)
+		bookList.get(checkOut).setStatus("Checked Out");
+		bookList.get(checkOut).setDueDate(dueDate);
+		
+		if(checkedOutBooks.size()<1)
+		{
+			userList.get(userName).add(bookList.get(checkOut));
+			BookWriteAndRead.rewriteUserToFile(userList);
+		}
+		else
+		{
+		checkedOutBooks.add(bookList.get(checkOut));
+		BookWriteAndRead.rewriteUserToFile(userList);
+		}
+		BookWriteAndRead.writeBooklistToFile(bookList);
+		System.out.println("\nThe book is yours, now get reading! This is due back on " + dueDate
+				+ ".\nDON'T be late...");
 	}
 
 }
