@@ -4,7 +4,8 @@ Kyle Dixon     Java For Dummies     Antonella Solomon     Checked Out     2019-0
 Jim Peters     null
 Sean Buck     How to Disappoint a Computer     Computer     Checked Out     2019-10-31     0
 Steve Steveson     null
-Matt Lynn     The Great Gatsby     F. Scott Fitzgerald     Checked Out     2019-11-17     0     Beloved     Toni Morrison     Checked Out     2019-11-18     0
+Tyler Mogk     null
+Matt Lynn     The Great Gatsby     F. Scott Fitzgerald     Checked Out     2019-11-17     0     Beloved     Toni Morrison     Checked Out     2019-11-18     0     It     Steven King     Checked Out     2019-11-18     0
  Nina Mills     Java For Dummies     Antonella Solomon     Checked Out     2019-11-04     0
 Jane Austin     How To Make Up Names     Alice FakeName     Checked Out     2019-11-17     0
 Tyler M.     How To Make Up Names     Alice FakeName     On Shelf     2019-11-15     1     I don't even write books     Stevie can'twrite     On Shelf     2019-11-17     4

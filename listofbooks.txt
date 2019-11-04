@@ -15,8 +15,9 @@ I don't even write books     Stevie can'twrite     On Shelf     2019-11-17     4
 Java For Dummies     Antonella Solomon     Checked Out     2019-11-04     0
 Everything Is Steak     Matt Lynn     On Shelf     2019-11-18     25
 The Adventures of Randy Saav     Kyle Dixon     On Shelf     null     1
-1984     George Orwell     On Shelf     2019-11-18     1
+1984     George Orwell     On Shelf     2019-11-04     1
 The Goldfinch     Donna Tart     On Shelf     null     1
 How to Disappoint a Computer     Computer     Checked Out     2019-11-04     0
-It     Steven King     On Shelf     null     1
+It     Steven King     Checked Out     2019-11-18     0
 It Follows     Josh Grimm     On Shelf     null     1
+Please Take My Book     Steven Stevenson     On Shelf     null     1
