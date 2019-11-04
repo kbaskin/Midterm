@@ -110,8 +110,8 @@ public class LibraryApp {
 
 				// after showing authors found - give option to check one of the books
 				// displayed out
-				String askCheckOut = Validator.getString(scan,
-						"\n\nDid you want to check one of these books out? (y/n) ");
+				String askCheckOut = Validator.getStringMatchingRegex(scan,
+						"\n\nDid you want to check one of these books out? (y/n) ", "[YyNn]");
 				if (askCheckOut.equalsIgnoreCase("yes") || (askCheckOut.equalsIgnoreCase("y"))) {
 					int bookCheckOut = Validator.getInt(scan,
 							"\nSelect the number of the book you would like to check out? ", 1, authorCounter);
@@ -149,14 +149,13 @@ public class LibraryApp {
 
 				if (bookList.get(checkOut - 1).getStatus().equalsIgnoreCase("Checked Out")) {
 					System.out.println("\nThis book is currently unavailable. So sad!");
-					String bookHold = Validator.getString(scan, "Did you want to join the hold list for this book? (y/n) ");
+					String bookHold = Validator.getStringMatchingRegex(scan, "Did you want to join the hold list for this book? (y/n) ", "[YyNn]");
 					if (bookHold.equalsIgnoreCase("yes") || (bookHold.equalsIgnoreCase("y"))) {
 						
 						System.out.println("Cool, cool. Yeah we don't do that here. So come back, say, March " + (int)(Math.random()*20 +31) + ".");
 					} else {
 						System.out.println("Good stuff, we definitely don't do that anyway. Maybe you should check out Everything is Steak.");
 					}
-					// FIXME - add code for hold list
 				} else {
 					String confirmCheckOut = Validator.getString(scan, "\nAre you sure you want to check out "
 							+ bookList.get(checkOut - 1).getTitle() + "? (y/n) ");
