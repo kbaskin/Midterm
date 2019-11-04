@@ -103,56 +103,18 @@ public class LibraryApp {
 			switch (menuChoice) {
 
 			case 1: // List of books title author status
-				System.out.printf("%-40s  %-40s %-15s", "\n   Title", " Author", " Status");
-				System.out.println();
-				for (int i = 0; i < bookList.size(); i++) {
-
-					System.out.printf("\n%-40s  %-40s %-15s", (i + 1) + ". " + bookList.get(i).getTitle(),
-							bookList.get(i).getAuthor(), bookList.get(i).getStatus());
-
-				}
-				System.out.println();
+				printBooks(bookList);
 				break;
 
 			case 2: // search by author
 				System.out.println("\nPlease enter the name of the author you would like to search: ");
 				bookAuthor = scan.nextLine();
 				counter = 0;
-				int authorCounter = 0;
-				System.out.printf("%-40s %-40s %-15s", "\n   Title", " Author", " Status");
-				System.out.println();
-				for (int i = 0; i < bookList.size(); i++) {
-					if (bookAuthor.equalsIgnoreCase(bookList.get(i).getAuthor())) {
-//						if(bookList.get(i).getQuantity()==0)
-//							bookList.get(i).setStatus("Checked Out");
-//						else
-//							bookList.get(i).setStatus("On Shelf");
-						System.out.printf("\n%-40s %-40s %-15s", ++counter + ". " + bookList.get(i).getTitle(),
-								bookList.get(i).getAuthor(), bookList.get(i).getStatus());
-						authorCounter++;
-					}
-				}
-
-				for (int i = 0; i < bookList.size(); i++) {
-					// check for keyword and display matches
-					String[] keyWords = bookList.get(i).getAuthor().split(" ");
-					for (int j = 0; j < keyWords.length; j++) {
-						// confirms that it isn't found twice (not the whole title)
-						if ((bookAuthor.equalsIgnoreCase(keyWords[j]))
-								&& (!bookAuthor.equalsIgnoreCase(bookList.get(i).getAuthor()))) {
-
-							System.out.printf("\n%-40s %-40s %-15s", ++counter + ". " + bookList.get(i).getTitle(),
-									bookList.get(i).getAuthor(), bookList.get(i).getStatus());
-							authorCounter++;
-						}
-					}
-
-				}
-				if (counter == 0) {
-					System.out.print("\nSorry, we couldn't find any books by " + bookAuthor + ".");
-					System.out.println();
+				int authorCounter = searchAuthor(bookList, bookAuthor);
+				if (authorCounter == 0) {
 					break;
 				}
+
 				// after showing authors found - give option to check one of the books
 				// displayed out
 				String askCheckOut = Validator.getString(scan,
@@ -160,37 +122,7 @@ public class LibraryApp {
 				if (askCheckOut.equalsIgnoreCase("yes") || (askCheckOut.equalsIgnoreCase("y"))) {
 					int bookCheckOut = Validator.getInt(scan,
 							"\nSelect the number of the book you would like to check out? ", 1, authorCounter);
-					authorCounter = 0;
-					for (int i = 0; i < bookList.size(); i++) {
-						if (bookAuthor.equalsIgnoreCase(bookList.get(i).getAuthor())) {
-							authorCounter++;
-							if (bookList.get(i).getStatus().equalsIgnoreCase("Checked Out")) {
-								System.out.println("\nThis book is currently unavailable. So sad!");
-								break;
-							} else if (authorCounter == bookCheckOut) {
-								checkOutBook(bookList, i, today, userList, checkedOutBooks, userName);
-							}
-						}
-					}
-
-					for (int i = 0; i < bookList.size(); i++) {
-						// check for keyword and display matches
-						String[] keyWords = bookList.get(i).getAuthor().split(" ");
-						for (int j = 0; j < keyWords.length; j++) {
-							// confirms that it isn't found twice (not the whole title)
-							if ((bookAuthor.equalsIgnoreCase(keyWords[j]))
-									&& (!bookAuthor.equalsIgnoreCase(bookList.get(i).getAuthor()))) {
-								authorCounter++;
-								if (bookList.get(i).getStatus().equalsIgnoreCase("Checked Out")) {
-									System.out.println("\nThis book is currently unavailable. So sad!");
-									break;
-								} else if (authorCounter == bookCheckOut) {
-									checkOutBook(bookList, i, dueDate, userList, checkedOutBooks, userName);
-								}
-							}
-						}
-
-					}
+					checkOutByAuthor(bookAuthor, bookList, bookCheckOut, dueDate, userList, checkedOutBooks, userName);
 				}
 				break;
 
@@ -202,32 +134,9 @@ public class LibraryApp {
 				counter = 0;
 				System.out.printf("%-40s  %-40s %-15s", "\n   Title", " Author", " Status");
 				System.out.println();
-				for (int i = 0; i < bookList.size(); i++) {
-					// check if exact title match and display before other books
-					if (keyWord.equalsIgnoreCase(bookList.get(i).getTitle())) {
-						System.out.printf("\n%-40s %-40s %-15s", ++counter + ". " + bookList.get(i).getTitle(),
-								bookList.get(i).getAuthor(), bookList.get(i).getStatus());
-					}
 
-				}
-				for (int i = 0; i < bookList.size(); i++) {
-					// check for keyword and display matches
-					String[] keyWords = bookList.get(i).getTitle().split(" ");
-					for (int j = 0; j < keyWords.length; j++) {
-						// confirms that it isn't found twice (not the whole title)
-						if ((keyWord.equalsIgnoreCase(keyWords[j]))
-								&& (!keyWord.equalsIgnoreCase(bookList.get(i).getTitle()))) {
-
-							System.out.printf("\n%-40s %-40s %-15s", ++counter + ". " + bookList.get(i).getTitle(),
-									bookList.get(i).getAuthor(), bookList.get(i).getStatus());
-						}
-					}
-
-				}
-
+				searchByTitle(bookList, keyWord);
 				if (counter == 0) {
-					System.out.print("\nSorry, we couldn't find any books with the keyword " + keyWord + ".");
-					System.out.println();
 					break;
 				}
 
@@ -236,48 +145,12 @@ public class LibraryApp {
 				if (userCheckOut.equalsIgnoreCase("yes") || (userCheckOut.equalsIgnoreCase("y"))) {
 					int bookCheckOut = Validator.getInt(scan,
 							"\nSelect the number of the book you would like to check out? ", 1, counter);
-					counter = 0;
-					for (int i = 0; i < bookList.size(); i++) {
-						if (keyWord.equalsIgnoreCase(bookList.get(i).getTitle())) {
-							counter++;
-							if (bookList.get(i).getStatus().equalsIgnoreCase("Checked Out")) {
-								System.out.println("\nThis book is currently unavailable. So sad!");
-								break;
-							} else if (counter == bookCheckOut) {
-								checkOutBook(bookList, i, today, userList, checkedOutBooks, userName);
-							}
-						}
-					}
-
-					for (int i = 0; i < bookList.size(); i++) {
-						// check for keyword and display matches
-						String[] keyWords = bookList.get(i).getTitle().split(" ");
-						for (int j = 0; j < keyWords.length; j++) {
-							// confirms that it isn't found twice (not the whole title)
-							if ((keyWord.equalsIgnoreCase(keyWords[j]))
-									&& (!keyWord.equalsIgnoreCase(bookList.get(i).getTitle()))) {
-								counter++;
-
-								if (bookList.get(i).getStatus().equalsIgnoreCase("Checked Out")) {
-									System.out.println("\nThis book is currently unavailable. So sad!");
-									break;
-								}
-								if (counter == bookCheckOut) {
-									checkOutBook(bookList, i, dueDate, userList, checkedOutBooks, userName);
-								}
-							}
-						}
-
-					}
+					searchByTitleKeyword(keyWord, bookList, bookCheckOut, dueDate, userList, checkedOutBooks, userName);
 				}
 				break;
 
 			case 4: // check out a book (reiterate book list)
-				System.out.printf("%-40s  %-40s %-15s", "\n   Title", " Author", " Status\n");
-				for (int i = 0; i < bookList.size(); i++) {
-					System.out.printf("\n%-40s  %-40s %-15s", (i + 1) + ". " + bookList.get(i).getTitle(),
-							bookList.get(i).getAuthor(), bookList.get(i).getStatus());
-				}
+				printBooks(bookList);
 				int checkOut = Validator.getInt(scan,
 						"\n\nSelect the number for the book you would like to check out: ", 1, bookList.size());
 
@@ -306,12 +179,7 @@ public class LibraryApp {
 					System.out.println("You don't have any books checked out!");
 					break;
 				}
-				System.out.printf("%-40s  %-40s", "\n   Title", " Author\n");
-				for (int i = 0; i < checkedOutBooks.size(); i++) {
-					System.out.printf("\n%-40s  %-40s", (i + 1) + ". " + checkedOutBooks.get(i).getTitle(),
-							checkedOutBooks.get(i).getAuthor());
-
-				}
+				printBooks(checkedOutBooks);
 				int bookReturn = Validator.getInt(scan, "\n\nSelect the number for the book you would like to return: ",
 						1, checkedOutBooks.size()); // 1 - end of the list of the books they have checked out
 
@@ -320,21 +188,7 @@ public class LibraryApp {
 
 					// Increases quantity in bookList by one
 
-					for (Book b : bookList) {
-						if (b.getTitle().equals(checkedOutBooks.get((bookReturn - 1)).getTitle())
-								&& b.getAuthor().equals(checkedOutBooks.get((bookReturn - 1)).getAuthor())) {
-							b.setQuantity(b.getQuantity() + 1);
-							b.setStatus("On Shelf");
-						}
-
-					}
-
-					// bookList.get(bookReturn - 1).setStatus("On Shelf");
-					checkedOutBooks.remove(bookReturn - 1);
-					BookWriteAndRead.rewriteUserToFile(userList);
-					BookWriteAndRead.writeBooklistToFile(bookList);
-					System.out.println("\nBook returned! You should definitely check out another book now!");
-					continue;
+					returnBook(bookList, checkedOutBooks, bookReturn, userList);
 				}
 
 				break;
@@ -387,6 +241,7 @@ public class LibraryApp {
 		scan.close();
 	}
 
+	// book checkout
 	public static void checkOutBook(ArrayList<Book> bookList, int checkOut, LocalDate dueDate,
 			HashMap<String, ArrayList<Book>> userList, ArrayList<Book> checkedOutBooks, String userName) {
 		// reduces quantity by 1 and checks for no copies left
@@ -405,6 +260,181 @@ public class LibraryApp {
 		BookWriteAndRead.writeBooklistToFile(bookList);
 		System.out.println(
 				"\nThe book is yours, now get reading! This is due back on " + dueDate + ".\nDON'T be late...");
+	}
+
+	// case 1 method
+	public static void printBooks(ArrayList<Book> bookList) {
+		System.out.printf("%-40s  %-40s %-15s", "\n   Title", " Author", " Status");
+		System.out.println();
+		for (int i = 0; i < bookList.size(); i++) {
+
+			System.out.printf("\n%-40s  %-40s %-15s", (i + 1) + ". " + bookList.get(i).getTitle(),
+					bookList.get(i).getAuthor(), bookList.get(i).getStatus());
+
+		}
+		System.out.println();
+	}
+
+	// case 2 search-by-author
+	public static int searchAuthor(ArrayList<Book> bookList, String bookAuthor) {
+		int authorCounter = 0;
+		System.out.printf("%-40s %-40s %-15s", "\n   Title", " Author", " Status");
+		System.out.println();
+		for (int i = 0; i < bookList.size(); i++) {
+			if (bookAuthor.equalsIgnoreCase(bookList.get(i).getAuthor())) {
+				System.out.printf("\n%-40s %-40s %-15s", ++authorCounter + ". " + bookList.get(i).getTitle(),
+						bookList.get(i).getAuthor(), bookList.get(i).getStatus());
+			}
+		}
+
+		for (int i = 0; i < bookList.size(); i++) {
+			// check for keyword and display matches
+			String[] keyWords = bookList.get(i).getAuthor().split(" ");
+			for (int j = 0; j < keyWords.length; j++) {
+				// confirms that it isn't found twice (not the whole title)
+				if ((bookAuthor.equalsIgnoreCase(keyWords[j]))
+						&& (!bookAuthor.equalsIgnoreCase(bookList.get(i).getAuthor()))) {
+
+					System.out.printf("\n%-40s %-40s %-15s", ++authorCounter + ". " + bookList.get(i).getTitle(),
+							bookList.get(i).getAuthor(), bookList.get(i).getStatus());
+				}
+			}
+
+		}
+		if (authorCounter == 0) {
+			System.out.print("\nSorry, we couldn't find any books by " + bookAuthor + ".");
+			System.out.println();
+			// break;
+		}
+		return authorCounter;
+	}
+
+	// case 2 checkout-by-author
+	public static void checkOutByAuthor(String bookAuthor, ArrayList<Book> bookList, int bookCheckOut,
+			LocalDate dueDate, HashMap<String, ArrayList<Book>> userList, ArrayList<Book> checkedOutBooks,
+			String userName) {
+		int authorCounter = 0;
+		for (int i = 0; i < bookList.size(); i++) {
+			if (bookAuthor.equalsIgnoreCase(bookList.get(i).getAuthor())) {
+				authorCounter++;
+				if (bookList.get(i).getStatus().equalsIgnoreCase("Checked Out")) {
+					System.out.println("\nThis book is currently unavailable. So sad!");
+					break;
+				} else if (authorCounter == bookCheckOut) {
+					checkOutBook(bookList, i, dueDate, userList, checkedOutBooks, userName);
+				}
+			}
+		}
+
+		for (int i = 0; i < bookList.size(); i++) {
+			// check for keyword and display matches
+			String[] keyWords = bookList.get(i).getAuthor().split(" ");
+			for (int j = 0; j < keyWords.length; j++) {
+				// confirms that it isn't found twice (not the whole title)
+				if ((bookAuthor.equalsIgnoreCase(keyWords[j]))
+						&& (!bookAuthor.equalsIgnoreCase(bookList.get(i).getAuthor()))) {
+					authorCounter++;
+					if (bookList.get(i).getStatus().equalsIgnoreCase("Checked Out")) {
+						System.out.println("\nThis book is currently unavailable. So sad!");
+						break;
+					} else if (authorCounter == bookCheckOut) {
+						checkOutBook(bookList, i, dueDate, userList, checkedOutBooks, userName);
+					}
+				}
+			}
+
+		}
+	}
+
+	// case 3 search-by-title/keyword
+	public static int searchByTitle(ArrayList<Book> bookList, String keyWord) {
+		int counter = 0;
+		for (int i = 0; i < bookList.size(); i++) {
+			// check if exact title match and display before other books
+			if (keyWord.equalsIgnoreCase(bookList.get(i).getTitle())) {
+				System.out.printf("\n%-40s %-40s %-15s", ++counter + ". " + bookList.get(i).getTitle(),
+						bookList.get(i).getAuthor(), bookList.get(i).getStatus());
+			}
+
+		}
+		for (int i = 0; i < bookList.size(); i++) {
+			// check for keyword and display matches
+			String[] keyWords = bookList.get(i).getTitle().split(" ");
+			for (int j = 0; j < keyWords.length; j++) {
+				// confirms that it isn't found twice (not the whole title)
+				if ((keyWord.equalsIgnoreCase(keyWords[j]))
+						&& (!keyWord.equalsIgnoreCase(bookList.get(i).getTitle()))) {
+
+					System.out.printf("\n%-40s %-40s %-15s", ++counter + ". " + bookList.get(i).getTitle(),
+							bookList.get(i).getAuthor(), bookList.get(i).getStatus());
+				}
+			}
+
+		}
+
+		if (counter == 0) {
+			System.out.print("\nSorry, we couldn't find any books with the keyword " + keyWord + ".");
+			System.out.println();
+		}
+		return counter;
+	}
+
+	// search by title keyword
+	public static void searchByTitleKeyword(String keyWord, ArrayList<Book> bookList, int bookCheckOut,
+			LocalDate dueDate, HashMap<String, ArrayList<Book>> userList, ArrayList<Book> checkedOutBooks,
+			String userName) {
+		int counter = 0;
+		for (int i = 0; i < bookList.size(); i++) {
+			if (keyWord.equalsIgnoreCase(bookList.get(i).getTitle())) {
+				counter++;
+				if (bookList.get(i).getStatus().equalsIgnoreCase("Checked Out")) {
+					System.out.println("\nThis book is currently unavailable. So sad!");
+					break;
+				} else if (counter == bookCheckOut) {
+					checkOutBook(bookList, i, dueDate, userList, checkedOutBooks, userName);
+				}
+			}
+		}
+
+		for (int i = 0; i < bookList.size(); i++) {
+			// check for keyword and display matches
+			String[] keyWords = bookList.get(i).getTitle().split(" ");
+			for (int j = 0; j < keyWords.length; j++) {
+				// confirms that it isn't found twice (not the whole title)
+				if ((keyWord.equalsIgnoreCase(keyWords[j]))
+						&& (!keyWord.equalsIgnoreCase(bookList.get(i).getTitle()))) {
+					counter++;
+
+					if (bookList.get(i).getStatus().equalsIgnoreCase("Checked Out")) {
+						System.out.println("\nThis book is currently unavailable. So sad!");
+						break;
+					}
+					if (counter == bookCheckOut) {
+						checkOutBook(bookList, i, dueDate, userList, checkedOutBooks, userName);
+					}
+				}
+			}
+
+		}
+	}
+
+	// case 5 return book
+	public static void returnBook(ArrayList<Book> bookList, ArrayList<Book> checkedOutBooks, int bookReturn,
+			HashMap<String, ArrayList<Book>> userList) {
+		for (Book b : bookList) {
+			if (b.getTitle().equals(checkedOutBooks.get((bookReturn - 1)).getTitle())
+					&& b.getAuthor().equals(checkedOutBooks.get((bookReturn - 1)).getAuthor())) {
+				b.setQuantity(b.getQuantity() + 1);
+				b.setStatus("On Shelf");
+			}
+
+		}
+
+		// bookList.get(bookReturn - 1).setStatus("On Shelf");
+		checkedOutBooks.remove(bookReturn - 1);
+		BookWriteAndRead.rewriteUserToFile(userList);
+		BookWriteAndRead.writeBooklistToFile(bookList);
+		System.out.println("\nBook returned! You should definitely check out another book now!");
 	}
 
 }

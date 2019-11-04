@@ -13,6 +13,6 @@ The Color Purple     Alice Walker     On Shelf     2019-11-15     1
 How To Make Up Names     Alice FakeName     Checked Out     2019-11-17     0
 I don't even write books     Stevie can'twrite     On Shelf     2019-11-17     4
 Java For Dummies     Antonella Solomon     On Shelf     2019-02-14     1
-Everything Is Steak     Matt Lynn     On Shelf     2019-11-18     26
+Everything Is Steak     Matt Lynn     On Shelf     2019-11-18     25
 The Adventures of Randy Saav     Kyle Dixon     On Shelf     null     1
 1984     George Orwell     Checked Out     2019-11-18     0
