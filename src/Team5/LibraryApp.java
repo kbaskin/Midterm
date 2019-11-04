@@ -9,16 +9,12 @@ public class LibraryApp {
 
 	public static void main(String[] args) {
 		Scanner scan = new Scanner(System.in);
-		// Intro
-		// createList
 		int counter = 0;
 		boolean lateFees = false;
 		String bookTitle, bookAuthor;
 		ArrayList<Book> bookList = new ArrayList<Book>();
 		bookList = BookWriteAndRead.readBookListFromFile();
 		String cont = "n";
-		String status = "On Shelf";
-		// set arraylist = BookHelper.readBookList()
 		LocalDate today = LocalDate.now();
 		LocalDate dueDate = today.plusWeeks(2);
 		HashMap<String, ArrayList<Book>> userList = new HashMap<>();
@@ -83,8 +79,8 @@ public class LibraryApp {
 
 			// menu
 			System.out.println(
-					"\n1. List all books\n2. Search by author\n3. Search by title or title keyword\n4. Check out a book\n5. Return a book\n6. Donate a book\n7. Exit");
-			int menuChoice = Validator.getInt(scan, "\nWhat would you like to do? Enter menu number: ", 1, 7);
+					"\n1. List all books\n2. Search by author\n3. Search by title or title keyword\n4. Check out a book\n5. Return a book\n6. Donate a book\n7. Buy a cat\n8. Exit");
+			int menuChoice = Validator.getInt(scan, "\nWhat would you like to do? Enter menu number: ", 1, 8);
 
 			// List of books title author status
 			// search by author
@@ -153,13 +149,13 @@ public class LibraryApp {
 
 				if (bookList.get(checkOut - 1).getStatus().equalsIgnoreCase("Checked Out")) {
 					System.out.println("\nThis book is currently unavailable. So sad!");
-//					String bookHold = Validator.getString(scan, "Did you want to join the hold list for this book? (y/n) ");
-//					if (bookHold.equalsIgnoreCase("yes") || (bookHold.equalsIgnoreCase("y"))) {
-//						
-//						System.out.println("You have been added to the hold list and we will let you know when the book is available! Super super cool!");
-//					} else {
-//						continue; 
-//					}
+					String bookHold = Validator.getString(scan, "Did you want to join the hold list for this book? (y/n) ");
+					if (bookHold.equalsIgnoreCase("yes") || (bookHold.equalsIgnoreCase("y"))) {
+						
+						System.out.println("Cool, cool. Yeah we don't do that here. So come back, say, March " + (int)(Math.random()*20 +31) + ".");
+					} else {
+						System.out.println("Good stuff, we definitely don't do that anyway. Maybe you should check out Everything is Steak.");
+					}
 					// FIXME - add code for hold list
 				} else {
 					String confirmCheckOut = Validator.getString(scan, "\nAre you sure you want to check out "
@@ -196,7 +192,13 @@ public class LibraryApp {
 				bookAuthor = Validator.getString(scan, "\nAwesome, and please enter the author's name: ");
 				donateBook(bookList, bookTitle, bookAuthor, userName);
 				break;
-			case 7: // Exit
+			
+			case 7: //Buy a cat
+				System.out.println();
+				System.out.println("Sorry, this is not available yet. Team 5 is still in talks with Group 1.\nIn  the meantime, curl up with a good book!");
+				break;
+				
+			case 8: // Exit
 				cont = Validator.getStringMatchingRegex(scan, "\nAre you sure you want to leave the library? (y/n): ",
 						"[YyNn]");
 

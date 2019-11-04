@@ -17,32 +17,6 @@ import java.util.HashMap;
 
 public class BookWriteAndRead {
 
-//	public static void readBooklistFromFile() {
-//
-//		String bookList = "listofbooks.txt";
-//		Path p = Paths.get("Book", bookList);
-//
-//		try {
-//			File file = p.toFile();
-//			BufferedReader br = new BufferedReader(new FileReader(file));
-//
-//			String line = br.readLine();
-//
-//			while (line != null) {
-//				System.out.println(line);
-//				line = br.readLine();
-//			}
-//			br.close();
-//		} catch (FileNotFoundException e) {
-//			System.out.println("Something went wrong with the file. ");
-//
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			// e.printStackTrace();
-//			System.out.println("Something went wrong when we tried to read the file. ");
-//		}
-//	}
-
 	public static ArrayList<Book> readBookListFromFile() {
 
 		String bookList = "listofbooks.txt";
@@ -255,7 +229,6 @@ public class BookWriteAndRead {
 	public static HashMap<String, ArrayList<Book>> readUserFromFile() {
 
 		String fileName = "userlistofbooks.txt";
-		Path p = Paths.get(fileName);
 		HashMap<String, ArrayList<Book>> userList = new HashMap<>();
 
 		try {
