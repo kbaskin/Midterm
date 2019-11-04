@@ -175,7 +175,7 @@ public class LibraryApp {
 					String confirmCheckOut = Validator.getString(scan, "\nAre you sure you want to check out "
 							+ bookList.get(checkOut - 1).getTitle() + "? (y/n) ");
 					if (confirmCheckOut.equalsIgnoreCase("yes") || (confirmCheckOut.equalsIgnoreCase("y"))) {
-						checkOutBook(bookList, checkOut - 1, today, userList, checkedOutBooks, userName);
+						checkOutBook(bookList, checkOut - 1, dueDate, userList, checkedOutBooks, userName);
 					}
 				}
 
