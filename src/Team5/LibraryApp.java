@@ -1,3 +1,8 @@
+/*
+ * Authors: Katie Baskin, Matt Lynn, Tyler Mogk
+ * Go Team 5!
+ */
+
 package Team5;
 
 import java.time.LocalDate;
@@ -21,10 +26,12 @@ public class LibraryApp {
 		userList = BookWriteAndRead.readUserFromFile();
 		boolean returnName = false;
 
+		// welcome prompt
 		System.out.println("It's the library, whatever, no big deal\n");
+		// prompt for user's full name
 		String userName = Validator.getString(scan, "So... what's your full name? ");
-		// check if user is in system
 
+		// check if user is in system
 		for (String n : userList.keySet()) {
 			if (userName.equalsIgnoreCase(n)) {
 				userName = n;
@@ -35,7 +42,7 @@ public class LibraryApp {
 
 		if (returnName == false) {
 			System.out.println("\nI see you are new! Welcome to the best library everrrrr!");
-			// ask if they want to be a member
+			// if not in the system, ask if they want to be a member
 			String addUser = Validator.getString(scan,
 					"Would you like to become a member of the best library ever? (y/n)");
 			if (addUser.equalsIgnoreCase("yes") || (addUser.equalsIgnoreCase("y"))) {
@@ -56,7 +63,7 @@ public class LibraryApp {
 		checkedOutBooks.ensureCapacity(5);
 		checkedOutBooks = userList.get(userName);
 		for (Book b : checkedOutBooks) {
-			if (b.getDueDate().isBefore(today)) {
+			if (b.getDueDate().isBefore(today)) { // if returning user has book past due
 				lateFees = true;
 				System.out.println(b.getTitle() + " by " + b.getAuthor() + " is overdue.");
 			}
@@ -69,6 +76,7 @@ public class LibraryApp {
 			if (choice.equalsIgnoreCase("n")) {
 				System.out.println(
 						"What, too cheap eh? Go win some money sweeping mines or playing hangman then, there's at least a few groups doing those right?");
+				// needed to reference other groups
 				System.out.println("I heard pneumonoultramicroscopicsilicovolcanoconiosis is a word.");
 				System.exit(0);
 			}
@@ -103,6 +111,8 @@ public class LibraryApp {
 				System.out.println("\nPlease enter the name of the author you would like to search: ");
 				bookAuthor = scan.nextLine();
 				counter = 0;
+				// calling searchAuthor method to search through bookList and display results by
+				// name or keyword
 				int authorCounter = searchAuthor(bookList, bookAuthor);
 				if (authorCounter == 0) {
 					break;
@@ -133,6 +143,8 @@ public class LibraryApp {
 					break;
 				}
 
+				// after showing list of titles by title/keyword, option to check one of them
+				// out
 				String userCheckOut = Validator.getString(scan,
 						"\n\nDid you want to check one of these books out? (y/n) ");
 				if (userCheckOut.equalsIgnoreCase("yes") || (userCheckOut.equalsIgnoreCase("y"))) {
@@ -149,14 +161,17 @@ public class LibraryApp {
 
 				if (bookList.get(checkOut - 1).getStatus().equalsIgnoreCase("Checked Out")) {
 					System.out.println("\nThis book is currently unavailable. So sad!");
+
+// asking user to join hold list
 					String bookHold = Validator.getStringMatchingRegex(scan, "Did you want to join the hold list for this book? (y/n) ", "[YyNn]");
 					if (bookHold.equalsIgnoreCase("yes") || (bookHold.equalsIgnoreCase("y"))) {
-						
+						// either way, we let user know that we don't have a hold list
 						System.out.println("Cool, cool. Yeah we don't do that here. So come back, say, March " + (int)(Math.random()*20 +31) + ".");
 					} else {
 						System.out.println("Good stuff, we definitely don't do that anyway. Maybe you should check out Everything is Steak.");
 					}
-				} else {
+
+				} else { // confirm book check out
 					String confirmCheckOut = Validator.getString(scan, "\nAre you sure you want to check out "
 							+ bookList.get(checkOut - 1).getTitle() + "? (y/n) ");
 					if (confirmCheckOut.equalsIgnoreCase("yes") || (confirmCheckOut.equalsIgnoreCase("y"))) {
@@ -171,10 +186,12 @@ public class LibraryApp {
 					System.out.println("You don't have any books checked out!");
 					break;
 				}
+				// show user's books they have checked out
 				printBooks(checkedOutBooks);
 				int bookReturn = Validator.getInt(scan, "\n\nSelect the number for the book you would like to return: ",
 						1, checkedOutBooks.size()); // 1 - end of the list of the books they have checked out
 
+				// confirm return
 				String confirmReturn = Validator.getString(scan, "\nAre you sure you want to return this book? (y/n)");
 				if ((confirmReturn.equalsIgnoreCase("y")) || (confirmReturn.equalsIgnoreCase("yes"))) {
 
@@ -189,17 +206,19 @@ public class LibraryApp {
 				System.out.println("\nOh, wait, you aren't kidding? You want to donate a book?");
 				bookTitle = Validator.getString(scan, "\nSweet, please enter the title of the book: ");
 				bookAuthor = Validator.getString(scan, "\nAwesome, and please enter the author's name: ");
-				donateBook(bookList, bookTitle, bookAuthor, userName);
+				donateBook(bookList, bookTitle, bookAuthor, userName); // book added to bookList and quantity increased
+																		// by 1
 				break;
 			
 			case 7: //Buy a cat
 				System.out.println();
+				// needed to reference group 1
 				System.out.println("Sorry, this is not available yet. Team 5 is still in talks with Group 1.\nIn  the meantime, curl up with a good book!");
 				break;
 				
 			case 8: // Exit
 				cont = Validator.getStringMatchingRegex(scan, "\nAre you sure you want to leave the library? (y/n): ",
-						"[YyNn]");
+						"[YyNn]"); // confirm exit
 
 				break;
 			}
@@ -221,6 +240,7 @@ public class LibraryApp {
 			bookList.get(checkOut).setStatus("Checked Out");
 		bookList.get(checkOut).setDueDate(dueDate);
 
+		// avoiding null pointer exception error
 		if (checkedOutBooks.size() < 1) {
 			userList.get(userName).add(bookList.get(checkOut));
 			BookWriteAndRead.rewriteUserToFile(userList);
@@ -233,7 +253,7 @@ public class LibraryApp {
 				"\nThe book is yours, now get reading! This is due back on " + dueDate + ".\nDON'T be late...");
 	}
 
-	// case 1 method
+	// case 1 method for booList print out
 	public static void printBooks(ArrayList<Book> bookList) {
 		System.out.printf("%-40s  %-40s %-15s", "\n   Title", " Author", " Status");
 		System.out.println();
@@ -272,6 +292,7 @@ public class LibraryApp {
 			}
 
 		}
+		// if we can't find any authors matching keyword
 		if (authorCounter == 0) {
 			System.out.print("\nSorry, we couldn't find any books by " + bookAuthor + ".");
 			System.out.println();
@@ -280,7 +301,7 @@ public class LibraryApp {
 		return authorCounter;
 	}
 
-	// case 2 checkout-by-author
+	// case 2 checkout-by-author after searching for author or author keyword
 	public static void checkOutByAuthor(String bookAuthor, ArrayList<Book> bookList, int bookCheckOut,
 			LocalDate dueDate, HashMap<String, ArrayList<Book>> userList, ArrayList<Book> checkedOutBooks,
 			String userName) {
@@ -343,7 +364,7 @@ public class LibraryApp {
 		}
 
 		System.out.println();
-		if (counter == 0) {
+		if (counter == 0) { // if no books match title keyword search
 			System.out.print("\nSorry, we couldn't find any books with the keyword " + keyWord + ".");
 			System.out.println();
 		}
@@ -417,6 +438,7 @@ public class LibraryApp {
 				if (b.getQuantity() > 4) {
 					System.out.println("\nWhat, that book? Come on " + userName + ", we already got like, "
 							+ b.getQuantity() + " of those. Donate it to Bryan, I heard he has a library.");
+					// reference to Bryan's project
 
 				} else {
 					// if we have less than 5, increase quantity
