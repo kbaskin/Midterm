@@ -44,9 +44,6 @@ public class LibraryApp {
 					"Would you like to become a member of the best library ever? (y/n)");
 			if (addUser.equalsIgnoreCase("yes") || (addUser.equalsIgnoreCase("y"))) {
 				userList.put(userName, null);
-				for (String i : userList.keySet()) {
-					System.out.println(i + userList.get(i));
-				}
 
 				BookWriteAndRead.addNewUserToFile(userName, null);
 				userList = BookWriteAndRead.readUserFromFile();
@@ -135,7 +132,7 @@ public class LibraryApp {
 				System.out.printf("%-40s  %-40s %-15s", "\n   Title", " Author", " Status");
 				System.out.println();
 
-				searchByTitle(bookList, keyWord);
+				counter = searchByTitle(bookList, keyWord);
 				if (counter == 0) {
 					break;
 				}
@@ -197,34 +194,7 @@ public class LibraryApp {
 				System.out.println("\nOh, wait, you aren't kidding? You want to donate a book?");
 				bookTitle = Validator.getString(scan, "\nSweet, please enter the title of the book: ");
 				bookAuthor = Validator.getString(scan, "\nAwesome, and please enter the author's name: ");
-				Boolean extraCopies = false;
-				for (Book b : bookList) {
-					if ((b.getTitle().equalsIgnoreCase(bookTitle)) && b.getAuthor().equalsIgnoreCase(bookAuthor)) {
-						// if we have 5 copies, rejects
-						if (b.getQuantity() > 4) {
-							System.out.println("\nWhat, that book? Come on " + userName + ", we already got like, "
-									+ b.getQuantity() + " of those. Donate it to Bryan, I heard he has a library.");
-
-						} else {
-							// if we have less than 5, increase quantity
-							b.setQuantity(b.getQuantity() + 1);
-							System.out.println("\nThank you " + userName + "! Now we have another copy of " + bookTitle
-									+ " for the Team 5.");
-							System.out.println("no takebacks.");
-							b.setStatus("On Shelf");
-						}
-						extraCopies = true;
-					}
-				}
-				// if we have no copies, add a copy to list
-				if (!extraCopies) {
-					bookList.add(new Book(bookTitle, bookAuthor));
-					System.out.println(
-							"\nThank you " + userName + "! We have added " + bookTitle + " to the library of Team 5.");
-					System.out.println("No takebacks.");
-				}
-
-				BookWriteAndRead.writeBooklistToFile(bookList);
+				donateBook(bookList, bookTitle, bookAuthor, userName);
 				break;
 			case 7: // Exit
 				cont = Validator.getStringMatchingRegex(scan, "\nAre you sure you want to leave the library? (y/n): ",
@@ -355,7 +325,6 @@ public class LibraryApp {
 				System.out.printf("\n%-40s %-40s %-15s", ++counter + ". " + bookList.get(i).getTitle(),
 						bookList.get(i).getAuthor(), bookList.get(i).getStatus());
 			}
-
 		}
 		for (int i = 0; i < bookList.size(); i++) {
 			// check for keyword and display matches
@@ -372,6 +341,7 @@ public class LibraryApp {
 
 		}
 
+		System.out.println();
 		if (counter == 0) {
 			System.out.print("\nSorry, we couldn't find any books with the keyword " + keyWord + ".");
 			System.out.println();
@@ -435,6 +405,39 @@ public class LibraryApp {
 		BookWriteAndRead.rewriteUserToFile(userList);
 		BookWriteAndRead.writeBooklistToFile(bookList);
 		System.out.println("\nBook returned! You should definitely check out another book now!");
+	}
+
+	// case 6 donate a book
+	public static void donateBook(ArrayList<Book> bookList, String bookTitle, String bookAuthor, String userName) {
+		Boolean extraCopies = false;
+		for (Book b : bookList) {
+			if ((b.getTitle().equalsIgnoreCase(bookTitle)) && b.getAuthor().equalsIgnoreCase(bookAuthor)) {
+				// if we have 5 copies, rejects
+				if (b.getQuantity() > 4) {
+					System.out.println("\nWhat, that book? Come on " + userName + ", we already got like, "
+							+ b.getQuantity() + " of those. Donate it to Bryan, I heard he has a library.");
+
+				} else {
+					// if we have less than 5, increase quantity
+					b.setQuantity(b.getQuantity() + 1);
+					System.out.println("\nThank you " + userName + "! Now we have another copy of " + bookTitle
+							+ " for the Team 5.");
+					System.out.println("no takebacks.");
+					b.setStatus("On Shelf");
+				}
+				extraCopies = true;
+			}
+		}
+		// if we have no copies, add a copy to list
+		if (!extraCopies) {
+			bookList.add(new Book(bookTitle, bookAuthor));
+			System.out
+					.println("\nThank you " + userName + "! We have added " + bookTitle + " to the library of Team 5.");
+			System.out.println("No takebacks.");
+		}
+
+		BookWriteAndRead.writeBooklistToFile(bookList);
+
 	}
 
 }

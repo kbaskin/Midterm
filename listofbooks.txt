@@ -1,18 +1,20 @@
-Anna Karenina     Leo Tolstoy     On Shelf     2019-11-18     1
+Anna Karenina     Leo Tolstoy     On Shelf     2019-11-18     3
 To Kill A Mockingbird     Harper Lee     On Shelf     2019-11-15     1
 The Great Gatsby     F. Scott Fitzgerald     On Shelf     2019-11-17     1
 One Hundred Years of Solitude     Gabriel Garcia Marquez     On Shelf     null     1
 A Passage to India     E.M. Forster     On Shelf     2019-11-15     1
 Invisible Man     Ralph Ellison     On Shelf     2019-11-18     1
 Don Quixote     Miguel de Cervantes     On Shelf     null     1
-Beloved     Toni Morrison     On Shelf     null     1
+Beloved     Toni Morrison     Checked Out     2019-11-18     0
 Mrs. Dalloway     Virginia Woolf     On Shelf     2019-11-17     1
 Things Fall Apart     Chinua Achebe     On Shelf     2019-11-17     1
 Jane Eyre     Charlotte Bronte     On Shelf     2019-11-15     1
 The Color Purple     Alice Walker     On Shelf     2019-11-15     1
 How To Make Up Names     Alice FakeName     Checked Out     2019-11-17     0
 I don't even write books     Stevie can'twrite     On Shelf     2019-11-17     4
-Java For Dummies     Antonella Solomon     On Shelf     2019-02-14     1
+Java For Dummies     Antonella Solomon     Checked Out     2019-11-04     0
 Everything Is Steak     Matt Lynn     On Shelf     2019-11-18     25
 The Adventures of Randy Saav     Kyle Dixon     On Shelf     null     1
-1984     George Orwell     Checked Out     2019-11-18     0
+1984     George Orwell     On Shelf     2019-11-18     1
+The Goldfinch     Donna Tart     On Shelf     null     1
+How to Disappoint a Computer     Computer     Checked Out     2019-11-04     0
