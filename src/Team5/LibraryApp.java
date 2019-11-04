@@ -23,8 +23,6 @@ public class LibraryApp {
 		LocalDate today = LocalDate.now();
 		HashMap<String, ArrayList<Book>> userList = new HashMap<>();
 		userList=BookWriteAndRead.readUserFromFile();
-		for(String n: userList.keySet())
-			System.out.println(n + userList.get(n));
 		boolean returnName = false;
 
 		System.out.println("It's the library, whatever, no big deal\n");
@@ -56,7 +54,7 @@ public class LibraryApp {
 				System.out.println("\nGreat! You are now an official member!");
 			} else {
 				System.out.println(
-						"\nLAME. \nMaybe when you're done working your muscles at whatever gym Group 3 signed you up for... \nyou can come back and work your brain by reading some of our awesome books!");
+						"\nLAME. \nMaybe when you're done working your muscles at whatever gym Group 4 signed you up for... \nyou can come back and work your brain by reading some of our awesome books!");
 				System.exit(0);
 			}
 		}
@@ -79,6 +77,7 @@ public class LibraryApp {
 			if(choice.equalsIgnoreCase("n"))
 			{
 				System.out.println("What, too cheap eh? Go win some money sweeping mines or playing hangman then, there's at least a few groups doing those right?");
+				System.out.println("I heard pneumonoultramicroscopicsilicovolcanoconiosis is a word.");
 				System.exit(0);
 			}
 			System.out.println("Your card has been charged, you should really return those!");
@@ -293,7 +292,7 @@ public class LibraryApp {
 					System.out.println("You don't have any books checked out!");
 						break;
 				}
-				System.out.printf("%-40s  %-40s %-15s", "\n   Title", " Author\n");
+				System.out.printf("%-40s  %-40s", "\n   Title", " Author\n");
 				for (int i = 0; i < checkedOutBooks.size(); i++) {
 					System.out.printf("\n%-40s  %-40s", (i + 1) + ". " + checkedOutBooks.get(i).getTitle(),
 							checkedOutBooks.get(i).getAuthor());
@@ -311,7 +310,10 @@ public class LibraryApp {
 						for(Book b: bookList)
 						{
 							if(b.getTitle().equals(checkedOutBooks.get((bookReturn-1)).getTitle()) && b.getAuthor().equals(checkedOutBooks.get((bookReturn-1)).getAuthor()))
+							{
 							b.setQuantity(b.getQuantity()+1);
+							b.setStatus("On Shelf");
+							}
 							
 						}
 						
